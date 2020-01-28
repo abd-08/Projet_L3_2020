@@ -7,7 +7,7 @@
 $name = 'toi';
 echo '<p>bonjour '.$name.'</p>';
 
-
+echo 'test'
 
 
 ?>
