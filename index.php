@@ -6,7 +6,7 @@
 <?php
 $name = 'abdel zeler';
 echo '<p>bonjour '.$name.'</p>';
-echo "versionn betaKMLFKMLFK"
+echo "versionn final"
 
 ?>
 </body>
