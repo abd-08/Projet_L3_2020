@@ -7,6 +7,7 @@
 $name = 'abdel zeler';
 echo '<p>bonjour '.$name.'</p>';
 echo "abdel"
+echo 'test'
 ?>
 </body>
 </html>
