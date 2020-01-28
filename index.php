@@ -6,9 +6,8 @@
 <?php
 $name = 'abdel zeler';
 echo '<p>bonjour '.$name.'</p>';
-echo "abdel"
-echo 'test'
-echo 'text 23'
+echo "versionn beta"
+
 ?>
 </body>
 </html>
