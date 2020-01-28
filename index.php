@@ -4,8 +4,12 @@
 </head>
 <body>
 <?php
-$name = 'abdel zeler';
+$name = 'toi';
 echo '<p>bonjour '.$name.'</p>';
+
+
+
+
 ?>
 </body>
 </html>
