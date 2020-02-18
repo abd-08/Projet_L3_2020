@@ -46,3 +46,4 @@ function affichetab($tab){
        echo "$i . $tab[$i]<br/>";
      }
 }
+

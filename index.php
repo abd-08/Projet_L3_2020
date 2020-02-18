@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +19,7 @@
     </style>
 </head>
 <body class="bg">
+      <?php include "header.php"; ?>
     <div class="container">
         <br><br><br>
         <div class="row">
@@ -42,6 +44,8 @@
             </div>
         </div>
     </div>
+  
+      <?php  include "footer.php"; ?>
 </body>
 </html>
 
