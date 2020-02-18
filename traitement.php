@@ -1,9 +1,10 @@
 <?php
 
 function comparaison_phrase($phrase, $phrase2){
+    $resultat= 0;
     $resultat = similar_text($phrase , $phrase2);
     if (strlen($phrase)==0)return 0;
-    return $resultat/strlen($phrase);
+    return $resultat;
 }
 
 
