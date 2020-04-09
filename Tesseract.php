@@ -6,7 +6,7 @@ if(isset($_FILES['image'])){
     echo "<h3>Image Upload Success</h3>";
     echo '<img src="images/'.$file_name.'" style="width:30%">';
 
-    shell_exec('"C:\\Program Files (x86)\\Tesseract-OCR\\tesseract" "C:\\wamp64\\www\\tutophp\\images\\'.$file_name.'" out');
+    shell_exec('"C:\\Program Files (x86)\\Tesseract-OCR\\tesseract" "C:\\wamp64\\www\\tutophp\\images\\'.$file_name.'" out.txt');
 
     echo "<br><h3>OCR after reading</h3><br><pre>";
 

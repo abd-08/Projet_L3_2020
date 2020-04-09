@@ -1,5 +1,7 @@
 {
     "require": {
-        "google/cloud-vision": "^0.25.0"
+        "google/cloud-vision": "^0.25.0",
+        "curl/curl": "^2.2",
+        "google/apiclient": "^2.0"
     }
 }

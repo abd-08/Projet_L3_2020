@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" http-equiv="pragma" content="no-cache" />
     <title>Uploader votre image </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <style>
@@ -34,12 +34,13 @@
                     <br>
                     <button type="submit" style="border-radius: 0px;" formaction="Cloudvision.php" class="btn btn-lg btn-block btn-outline-success">Analyse Image Cloud Vision</button>
                     <button type="submit" style="border-radius: 0px;" formaction="Tesseract.php" class="btn btn-lg btn-block btn-outline-success">Analyse Image TESSERACT</button>
-                </form>
+                 </form>
                     <br/>
                     <br/>
                     <br/>
-                 <form action="CompareText.php" method="post" enctype="multipart/form-data">
+                    <form>
                     <button type="submit" style="border-radius: 0px;" formaction="CompareText.php" class="btn btn-lg btn-block btn-outline-success">Comparer 2 textesT</button>
+                    <button type="submit" style="border-radius: 0px;" formaction="CompareWeb.php" class="btn btn-lg btn-block btn-outline-success">Recherche plagiat internet</button>
                     </form>
             </div>
         </div>
