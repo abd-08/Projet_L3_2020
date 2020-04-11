@@ -1,3 +1,11 @@
+h3{
+    padding-top: 10px;
+}
+
+section{
+    margin-left: 20px;
+}
+
 footer{
     text-align:center;
     color:white;
@@ -12,11 +20,45 @@ header{
     color: white;
 }
 
-div{
-    padding-top: 20px;
-}
-
 input{
     margin-top: 20px;
     margin-bottom: 20px ;
 }
+
+#formText{
+    display:flex;
+}
+
+label {
+    display: block;
+    float: left;
+    width: 10em;
+    margin-right: 1em;
+    clear: left;
+}
+
+textarea {
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    outline: none;
+    resize: none;
+}
+
+a, a:hover{
+    text-decoration:none;
+    color:white;
+}
+
+#fromWeb{
+    margin-top: 15px;
+}
+
+#compareweb{
+    margin-left: 15px;
+}
+
+
+
