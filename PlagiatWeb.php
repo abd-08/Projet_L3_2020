@@ -42,10 +42,5 @@ $varf =rechercheTexteWeb($texte1);
 var_dump($varf);
 
 
-echo "RECHERCHE AVANCEE ";
-var_dump(avance($varf));
-
-
-
 ?>
 </html>

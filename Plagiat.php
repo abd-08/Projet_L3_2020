@@ -61,7 +61,6 @@ echo "le resultat last algo = ".compareMot($texte1, $texte2);
 echo "<br/> <br/>";
 
 
-
 ?>
 
 
