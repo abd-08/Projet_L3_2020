@@ -156,7 +156,7 @@ function affichetab($tab){
 
 
 function affiche($tab){
-       echo "tableau  :".count($tab)."<br/>";
+    echo "tableau  :".count($tab)."<br/>";
      for ($i=0; $i<count($tab); $i++) {
          for ($j=0; $j<count($tab[$i]); $j++) {
 
