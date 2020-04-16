@@ -13,10 +13,9 @@
 
 </head>
 
+<?php include "header.php"; ?>
 
-<h1> Détection plagiat <br/> </h1>
-
-
+<section>
 
 <?php
 
@@ -30,17 +29,17 @@ if (isset($_POST['formmulaire'])){
 }
  $texte1= $_POST['text_1'];
 
-
-echo "<h3> Resultat recherche web  </h3> ";
-
-
-
-echo "<br/> <br/>";
-echo "<br/> <br/>";
+echo "<br/>";
+echo "<h4> Resultat recherche web  </h4> ";
 
 $varf =rechercheTexteWeb($texte1);
 var_dump($varf);
 
 
 ?>
+
+</section>
+
+<?php  include "footer.php"; ?>
+
 </html>

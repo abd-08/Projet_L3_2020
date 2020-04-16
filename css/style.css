@@ -25,9 +25,9 @@ input{
     margin-bottom: 20px ;
 }
 
-#formText{
+/*#formText{
     display:flex;
-}
+} */
 
 label {
     display: block;
@@ -60,5 +60,8 @@ a, a:hover{
     margin-left: 15px;
 }
 
-
-
+.test {
+    border-style: solid;
+    border-color: black;
+    padding: 5px;
+}
