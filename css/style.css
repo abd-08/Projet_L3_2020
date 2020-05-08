@@ -1,7 +1,11 @@
-
-
 section{
     margin-left: 20px;
+}
+
+header{
+    background-color: white ;
+    text-align:center;
+    padding: 20px;
 }
 
 footer{
@@ -10,12 +14,6 @@ footer{
     padding: 1px;
     width: 100%;
     background-color: white;
-}
-
-header{
-    background-color: white ;
-    text-align:center;
-    padding: 20px;
 }
 
 input{
@@ -49,10 +47,6 @@ a, a:hover{
     margin-top: 15px;
 }
 
-#compareweb{
-    margin-left: 15px;
-}
-
 .test {
     border-style: solid;
     border-color: black;
@@ -66,15 +60,9 @@ a, a:hover{
     width: 80%;
 }
 
-#block1Web
-{
-    padding-left: 150px;
-    top:85px;
-}
-
 img{
-    height: 30px;
-    margin-bottom: 7px;
+    height: 34px;
+    margin-bottom: 10px;
 }
 
 .btn{
@@ -82,3 +70,16 @@ img{
     background-color: #3445B6;
     border-color: #3445B6;
 }
+
+#im1, #im2{
+    visibility: hidden;
+}
+
+#vld{
+    margin-top: -138px
+}
+
+#im1{
+
+}
+
