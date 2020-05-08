@@ -53,12 +53,12 @@
                 <textarea name="text_1" id="text_1" cols="50" rows="15"  placeholder="Entrez votre texte 1"></textarea>
             </div>
 
-            <div id="block1" class="col-md-6" >
+            <div id="block11" class="col-md-6" >
                 <input type="file" id="im1" name="image_1" accept="image/*" class="form-control" />
-                <input type="button" name="valider" value="Valider" class="btn btn-success mb-2" onClick="checkForm()" />
+                <input type="button" name="valider" value="Valider" class="btn mb-2" onClick="checkForm()" />
             </div>
 
-            <div id="block1" class="col-md-6" >
+            <div id="block2" class="col-md-6" >
                 texte <input type="radio" name="choix2" value="texte" onclick="mode('block2','im2','texte');" checked />
                 image <input type="radio" name="choix2" value="image" onclick="mode('block2','im2','image');" />
                 <br/>
@@ -66,9 +66,9 @@
                 <textarea name="text_2" cols="50" rows="15" placeholder="Entrez votre texte 2"></textarea>
             </div>
 
-            <div id="block2" class="col-md-6">
+            <div id="block22" class="col-md-6">
                 <input type="file" id="im2" name="image_2" accept="image/*" class="form-control" />
-                <input type="submit" id="compareweb" value="Valider"  class="btn btn-success mb-2"/>
+                <input type="submit" id="compareweb" value="Valider"  class="btn mb-2"/>
             </div>
         </form>
     </div>

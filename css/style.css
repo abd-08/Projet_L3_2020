@@ -1,6 +1,4 @@
-h3{
-    padding-top: 10px;
-}
+
 
 section{
     margin-left: 20px;
@@ -8,27 +6,22 @@ section{
 
 footer{
     text-align:center;
-    color:white;
-    padding:10px;
-    background-color: black;
+    color:#3445B6;
+    padding: 1px;
+    width: 100%;
+    background-color: white;
 }
 
 header{
-    background-color: black ;
+    background-color: white ;
     text-align:center;
     padding: 20px;
-    color: white;
 }
 
 input{
     margin-top: 20px;
     margin-bottom: 20px ;
 }
-
-/*#formText{
-    display:flex;
-} */
-
 label {
     display: block;
     float: left;
@@ -49,7 +42,7 @@ textarea {
 
 a, a:hover{
     text-decoration:none;
-    color:white;
+    color:#3445B6;
 }
 
 #fromWeb{
@@ -64,4 +57,28 @@ a, a:hover{
     border-style: solid;
     border-color: black;
     padding: 5px;
+}
+
+#index{
+    position: absolute;  /* postulat de départ */
+    top: 50%; left: 50%; /* à 50%/50% du parent référent */
+    transform: translate(-50%, -50%); /* décalage de 50% de sa propre taille */
+    width: 80%;
+}
+
+#block1Web
+{
+    padding-left: 150px;
+    top:85px;
+}
+
+img{
+    height: 30px;
+    margin-bottom: 7px;
+}
+
+.btn{
+    color: #fff;
+    background-color: #3445B6;
+    border-color: #3445B6;
 }

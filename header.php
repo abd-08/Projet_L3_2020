@@ -11,5 +11,5 @@
     <title>Détecteur de Plagiat</title>
 </head>
 <header>
-    <h1><a href="index.php">Application web pour détécter le plagiat</a> </h1>
+    <h2><a href="index.php">Savoie <img src="images/logo.jpg"/> Detect Plagiat</a> </h2>
 </header>
