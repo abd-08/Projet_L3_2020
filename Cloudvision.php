@@ -1,29 +1,29 @@
 <?php
 
 require "vendor/autoload.php";
-use Google\Cloud\Vision\VisionClient;
+ require "traitement.php";
+ require "TraitementOnline.php";
 
 if(isset($_FILES['image'])){
     $file_name = $_FILES['image']['name'];
     $file_tmp =$_FILES['image']['tmp_name'];
     move_uploaded_file($file_tmp,"images/".$file_name);
-    echo "<h3>Image Upload Success</h3>";
-    echo '<img src="images/'.$file_name.'" style="width:60%">';
-    echo "<br><h3>OCR after reading</h3><br><pre>";
+
+
+    echo ' <div style = "display:grid;"><div class="item" style = "display:flex;"><div><h3>Image Upload Success</h3>';
+    echo '<img src="images/'.$file_name.'" style="width:60%;"></div></div>';
 
 
 
-    $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
+    $contenu_img = CVTexte($file_name);//utilisation de cloud vision pour recuperer le texte
 
-    $ressource = fopen("images/".$file_name,'r');
+    $varf =rechercheTexteWeb($contenu_img);
+    afficheFormeTab($varf);
 
-    $image = $vision->image($ressource,['TEXT_DETECTION']);
-
-    $result = $vision->annotate($image);
-
-    $text = $result->text();
-    $fullText = $result->fullText();
-    echo $text[0]->info()['description'];
+    echo " </div>";
 
 
 }
+
+
+?>

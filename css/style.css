@@ -1,34 +1,25 @@
-h3{
-    padding-top: 10px;
-}
-
 section{
     margin-left: 20px;
 }
 
-footer{
-    text-align:center;
-    color:white;
-    padding:10px;
-    background-color: black;
-}
-
 header{
-    background-color: black ;
+    background-color: white ;
     text-align:center;
     padding: 20px;
-    color: white;
+}
+
+footer{
+    text-align:center;
+    color:#3445B6;
+    padding: 1px;
+    width: 100%;
+    background-color: white;
 }
 
 input{
     margin-top: 20px;
     margin-bottom: 20px ;
 }
-
-/*#formText{
-    display:flex;
-} */
-
 label {
     display: block;
     float: left;
@@ -49,19 +40,45 @@ textarea {
 
 a, a:hover{
     text-decoration:none;
-    color:white;
+    color:#3445B6;
 }
 
 #fromWeb{
     margin-top: 15px;
 }
 
-#compareweb{
-    margin-left: 15px;
-}
-
 .test {
     border-style: solid;
     border-color: black;
     padding: 5px;
+}
+
+#index{
+    position: absolute;  /* postulat de départ */
+    top: 50%; left: 50%; /* à 50%/50% du parent référent */
+    transform: translate(-50%, -50%); /* décalage de 50% de sa propre taille */
+    width: 80%;
+}
+
+img{
+    height: 34px;
+    margin-bottom: 10px;
+}
+
+.btn{
+    color: #fff;
+    background-color: #3445B6;
+    border-color: #3445B6;
+}
+
+#im1, #im2{
+    visibility: hidden;
+}
+
+#vld{
+    margin-top: -138px
+}
+
+#im1{
+
 }

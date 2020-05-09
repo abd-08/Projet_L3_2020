@@ -1,8 +1,12 @@
 <?php
+header( 'content-type: text/html; charset=utf-8' );
+use Google\Cloud\Vision\VisionClient;
 
 
 function blockRechercheR($html){
     //fonction qui renvoi un tableau avec les blocks de resultat de recherche google
+    //entre string
+    //sortie string
     $regex = "/\sxpd\sO9g5cc\suUPGi\"><div\sclass=\"kCrYT(.*?)url([\s\S]*?)(ZINbbc|mCljob)/i";
     preg_match_all($regex,$html,$tableau,PREG_PATTERN_ORDER);
     return $tableau[0];
@@ -90,7 +94,8 @@ function selectBetterlinkAvance($phrase){
 
     if(count($tableau_recheche)==1){ // si on a un seul resultat dans la recherche c est notre résultat
         $lien = recupereLienR($tableau_recheche[0]);
-        $resultat=[ $lien , 1];
+        $resultat=[$phrase, $lien , 1];
+        return $resultat;
     }
 
 
@@ -100,7 +105,7 @@ function selectBetterlinkAvance($phrase){
          $lien = recupereLienR($tableau_recheche[$i]);
 
         if ( $similarite > $resultat[1] ){
-            $resultat=[ $lien , $similarite];
+            $resultat=[$phrase, $lien , $similarite];
         }
      }
 
@@ -114,10 +119,9 @@ if ($resultat[1]<0.15){
      $similarite2 = compareMot( $entre , $contenu2 );
      if ($similarite2 > $resultat[1]){
           $lien2 = recupereLienR($tableau_recheche_2[0]);
-          $resultat=[ $lien2 , $similarite2];
+          $resultat=[ $phrase , $lien2 , $similarite2];
      }
  }
-
      return $resultat;
 }
 
@@ -126,13 +130,133 @@ if ($resultat[1]<0.15){
 
 function compareMot($s1,$s2){
     //on compare 2 chaines de caractère et on renvoi le pourcentage de similarite
+    //entre S1,S2 string
+    //sortie float
+    if (strlen($s1)<3 || strlen($s1)<3) return 0;
     $s1clean = preg_split("/\s?[\.\?\!\:\s]\s?/",$s1);
     $s2clean = preg_split("/\s?[\.\?\!\:\s]\s?/",$s2);
-    $result = array_intersect($s1clean, $s2clean);
-    if (strlen($s1)<3 | strlen($s1)<3) return 0;
+    $tabm = recupere_mot_tableau($s1clean);
+    $tabm2 = recupere_mot_tableau($s2clean);
+    $result = array_intersect($tabm, $tabm2);//insertion en debut de tableau
     return nombreChar(array_values($result))/nombreChar($s1clean);
+}
+
+function compareMot2($s1,$s2){
+    //on compare 2 chaines de caractère et on renvoi le pourcentage de similarite
+    //entre S1,S2 string
+    //sortie tab = [float similarite  , string phrase  , string phrase2 ]
+    $s1=str_replace(".",". ",$s1);
+    $s2=str_replace(".",". ",$s2);
+
+    $tableau_mot= preg_split("/\s/",$s1);
+    $tableau_mot_2 = preg_split("/\s/",$s2);
+
+    $tableau_mot_anexe = recupere_mot_tableau($tableau_mot);
+    $tableau_mot_2_anexe = recupere_mot_tableau($tableau_mot_2);
+
+    $result = array_uintersect($tableau_mot_anexe, $tableau_mot_2_anexe , 'strcasecmp'); // on cree un tableau avec le terme commun de deucx phrases
+    array_unshift($result , ""); ////insertion de "" en debut de tableau
+
+    $similarite =nombreChar(array_values($result))+count($result);
+
+    return [ $similarite , surligner_phrase($tableau_mot,$tableau_mot_anexe,$result),
+                    surligner_phrase($tableau_mot_2,$tableau_mot_2_anexe,$result)];
+}
+
+function est_char_special($char){
+//fonction qui verifie si un caractère est accentuer
+//entre string
+//Sortie booleen
+    $liste_char=["é", "è", "ê", "ë", "à", "â", "î", "ï", "ô", "ù", "û", "ü", "ÿ", "æ", "œ" ,"ç",
+                    "Â", "Ê", "Î", "Ô", "Û", "Ä", "Ë", "Ï", "Ö", "Ü", "À", "Æ", "æ", "Ç", "É", "È", "Œ","œ", "Ù"];
+    if (strlen($char)==2)  return in_array($char,$liste_char);
+    return false;
+}
+
+function est_char($char){
+//fonction qui verifie si un caractère est alphanumerique
+//entre string
+//Sortie booleen
+    if (strlen($char)==1 ) return preg_match('/[a-zA-Z0-0]/',$char)==true;
+    return false;
+}
+
+
+function recupere_mot($chaine){
+//  sans regex
+//fonction qui supprime le les caractère non alphanumerique en debut et en fin de chaine
+//entre : string
+//sortie : string
+    $debut=0;
+    $fin = strlen($chaine);
+    for ($i=0;$i<strlen($chaine);$i++){//on supprime les premiers caractères non alphanumerique
+        if (!est_char($chaine[$debut]) ) {
+            $debut++;
+            if (est_char_special(substr($chaine, $debut-1, 2))){//un caractère avec accent compte pour 2 caractère
+                $debut--;  break;
+            }
+        }
+        else break;
+    }
+
+    if($debut>= $fin) ;
+    else{
+        for ($i=0;$i<strlen($chaine);$i++){//on supprime les derniers caractères non alphanumerique
+            if (!est_char($chaine[$fin-1]) ) {
+                $fin--;
+                if (est_char_special(substr($chaine, $fin-1, 2))){
+                    $fin++; break;}
+            }
+            else break;
+        }
+    }
+    return  substr($chaine, $debut, $fin-$debut);
+}
+
+function recupere_mot_tableau($tableau){
+    //fonction qui récupere un tableau de string et applique la fonction recupere_mot sur chaque element
+    //entre : tableau de string
+    //sortie : tableau de string
+    $tableau_res=[];
+    for ($i=0;$i<count($tableau);$i++){
+         array_push($tableau_res , recupere_mot($tableau[$i]));
+    }
+    return $tableau_res;
+}
+
+
+function est_meme_famille($mot , $compare){
+    $nombre = similar_text($mot , $compare);
+    return $nombre > min(strlen($mot) , strlen($compare))-3;
+}
+
+function marquer_mot($mot_regex , $mot ){
+  return str_replace($mot," <mark>".$mot."</mark>",$mot_regex);
+}
+
+function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
+//fonction qui surligne les mots
+//entre phrase_tab : tableau de string  ; mot_a_souligner : tableau de string
+//sortie string
+
+ $phrase_resultat="";
+ for ($i=0;$i<count($phrase_tab);$i++){
+     $index = array_search($phrase_tab_anexe[$i],$mot_a_souligner);
+    if ($index>0){
+        //unset($mot_a_souligner[$index]);
+        //$mot_a_souligner = array_values($mot_a_souligner);
+        $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );
+    }
+    else $phrase_resultat = $phrase_resultat." ".$phrase_tab[$i];
+ }
+ return $phrase_resultat;
 
 }
+
+
+
+
+
 
 function rechercheTexteWeb($texte){
 //on va recuperer un tableau contenant le pourcentage de similarite d'une phrase
@@ -149,12 +273,11 @@ function rechercheTexteWeb($texte){
 
     //on construit un tableau a double dimension avec le lien qui se rapproche le plus a la phrase recherché ainsi que sa similarité
     $resultat=[];
-     for ($i=0; $i<count($tableau); $i++){
-        array_push($resultat, selectBetterlinkAvance($tableau[$i]));
+    for ($i=0; $i<count($tableau); $i++){
+    if (strlen($tableau[$i]) >10 ) array_push($resultat, selectBetterlinkAvance($tableau[$i]));
      }
 
-     var_dump($resultat);
-      return interpretationResultat($resultat ,$tableau);
+      return $resultat;
 }
 
 
@@ -172,7 +295,8 @@ function interpretationResultat($tableau_resultat ,$tableau_phrase){
 
         if( $prec[0]==$suiv[0] ){ // on teste si 2 lien sont identique et on les regroupes
             $cmp++;
-            $pourcentage = $pourcentage + $suiv[1];
+            //$pourcentage = $pourcentage + $suiv[1];
+            $pourcentage = $pourcentage + 1;
             $bloc=$bloc.$tableau_phrase[$i+1];
         }
         else{
@@ -187,6 +311,8 @@ function interpretationResultat($tableau_resultat ,$tableau_phrase){
 }
 
 
+
+
 function rechercheWebavance($tab){
     $bloc= $tab[0] ;
      $lien = $tab[1];
@@ -196,19 +322,71 @@ function rechercheWebavance($tab){
 
 
 
-function avance($tableau){
-    for ($i=0;$i<count($tableau);$i++){
-        $tableau[$i][2]= rechercheWebavance($tableau[$i]);
-    }
-    return $tableau;
-}
 
 function nombreChar($tableau){
+//fonction qui renvoie le nombre de char d une phrase
+// entre : tableau de string
+//sortie nombre
     $res=0;
     for ($i=0;$i<count($tableau);$i++){
         $res = $res + strlen($tableau[$i]);
     }
    return $res;
+}
+
+
+
+
+function tronquer($texte,$n){
+//fonction qui va afficher renvoyer les n premier charactere d'un string
+//entrée string
+//sortie string
+    if (strlen($texte) > $n)  {
+        $texte = substr($texte, 0, $n);
+        $texte =$texte.'...';
+        return $texte;
+    }
+    else return $texte;
+}
+
+function afficheFormeTab($tres){
+//procedure qui affiche un tableau à de type i*3 visuelement
+// entre : un tableau a deux dimension
+
+    echo "<table style='font: 100% sans-serif;  border-collapse: collapse; empty-cells: show; border: 1px solid #7a7;'>";
+    echo  " <thead style='background-color: #efe;''>  <tr> <td style=' text-align: center;'> phrase </td> ";
+    echo " <td style=' text-align: center;border: 1px solid #7a7;'> source </td>";
+    echo "<td style=' text-align: center;'> plagiat </td> </tr>  </thead> <tbody> ";
+
+    for ( $i=0 ; $i<count($tres) ; $i++){
+        echo ' <tr style ="border: 1px solid #7a7;">  <td >'.$tres[$i][0].'</td>';
+              $lien = '<a style ="color: rgb(0,5,0);" href='.$tres[$i][1].'>'.tronquer($tres[$i][1],30).'</a>';
+              echo  '<td style ="color: rgb(0,5,0);font-color:#efe;border: 1px solid #7a7;">'.$lien.'</td>';
+                echo '<td>'.number_format($tres[$i][2], 3).'</td> </tr>';
+    }
+    echo '</tbody></table>';
+
+}
+
+
+function CVTexte($file_name){
+//fonction qui prend recupere le texte d'une image
+//entrée : un path
+//en sortie : un string
+
+    $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
+
+    $ressource = fopen("images/".$file_name,'r');
+
+    $image = $vision->image($ressource,['TEXT_DETECTION']);
+
+    $result = $vision->annotate($image);
+
+    $text = $result->text();
+    $fullText = $result->fullText();
+    $contenu_img = $text[0]->info()['description'];
+
+    return $contenu_img;
 }
 
 
