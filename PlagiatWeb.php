@@ -32,16 +32,34 @@ if (isset($_POST['formmulaire'])){
 echo "<br/>";
 echo "<h4> Resultat recherche web  </h4> ";
 
-$varf =rechercheTexteWeb($texte1);
-var_dump($varf);
-
-
-echo "RECHERCHE AVANCEE ";
-var_dump(avance($varf));
-
-
+$varf = rechercheTexteWeb($texte1);
 
 ?>
+
+
+<table>
+        <thead>
+                <tr>
+                        <td>Pharse à comparer</td>
+                        <td>Site</td>
+                        <td> % </td>
+                </tr>
+        </thead>
+        <tbody>
+
+                <?php for($i=0; $i<sizeof($varf); $i++){ ?>
+                <tr>
+                        <td> <?= $varf[$i][0] ?> </td>
+                        <td> <?= $varf[$i][1] ?> </td>
+                        <td> <?= $varf[$i][2] ?> </td>
+                </tr>
+                <?php } ?>
+
+        </tbody>
+</table>
+
+
+
 
 </section>
 
