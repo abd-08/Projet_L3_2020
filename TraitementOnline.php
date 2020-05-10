@@ -94,7 +94,7 @@ function selectBetterlinkAvance($phrase){
 
     if(count($tableau_recheche)==1){ // si on a un seul resultat dans la recherche c est notre résultat
         $lien = recupereLienR($tableau_recheche[0]);
-        $resultat=[$phrase, $lien , 1];
+        $resultat=[$phrase, $lien , 100];
         return $resultat;
     }
 
@@ -105,7 +105,7 @@ function selectBetterlinkAvance($phrase){
          $lien = recupereLienR($tableau_recheche[$i]);
 
         if ( $similarite > $resultat[1] ){
-            $resultat=[$phrase, $lien , $similarite];
+            $resultat=[$phrase, $lien , $similarite*100];
         }
      }
 
@@ -119,7 +119,7 @@ if ($resultat[1]<0.15){
      $similarite2 = compareMot( $entre , $contenu2 );
      if ($similarite2 > $resultat[1]){
           $lien2 = recupereLienR($tableau_recheche_2[0]);
-          $resultat=[ $phrase , $lien2 , $similarite2];
+          $resultat=[ $phrase , $lien2 , $similarite2*100];
      }
  }
      return $resultat;
@@ -177,7 +177,7 @@ function est_char($char){
 //fonction qui verifie si un caractère est alphanumerique
 //entre string
 //Sortie booleen
-    if (strlen($char)==1 ) return preg_match('/[a-zA-Z0-0]/',$char)==true;
+    if (strlen($char)==1 ) return preg_match('/[a-zA-Z0-9]/',$char)==true;
     return false;
 }
 
@@ -362,7 +362,7 @@ function afficheFormeTab($tres){
         echo ' <tr style ="border: 1px solid #7a7;">  <td >'.$tres[$i][0].'</td>';
               $lien = '<a style ="color: rgb(0,5,0);" href='.$tres[$i][1].'>'.tronquer($tres[$i][1],30).'</a>';
               echo  '<td style ="color: rgb(0,5,0);font-color:#efe;border: 1px solid #7a7;">'.$lien.'</td>';
-                echo '<td>'.number_format($tres[$i][2], 3).'</td> </tr>';
+                echo '<td>'.number_format($tres[$i][2], 1)."%".'</td> </tr>';
     }
     echo '</tbody></table>';
 

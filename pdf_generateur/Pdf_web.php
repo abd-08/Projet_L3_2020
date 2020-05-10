@@ -38,8 +38,9 @@ class myPDF extends FPDF{
             $res = $res + $this->tablo[$i][2];
         }
         if (count($this->tablo)==0) return 0;
-        $res = ($res/count($this->tablo))*100;
+        $res = $res/count($this->tablo);
         return number_format($res, 2);
+       // return number_format($res, 2);
     }
 
 
@@ -161,8 +162,8 @@ class myPDF extends FPDF{
 
         $this->SetFillColor(255,255,50);
         $this->Cell(140,10,'Phrase',1,0,'C' ,true);
-        $this->Cell(60,10,'Site internet',1,0,'C' , true);
-        $this->Cell(60,10,'Pourcentage de plagiat',1,0,'C' , true);
+        $this->Cell(90,10,'Site internet',1,0,'C' , true);
+        $this->Cell(30,10,'Plagiat',1,0,'C' , true);
 
 
         $this->Ln();
@@ -191,16 +192,16 @@ $pdf = new mypdf;
 $pdf->setTableau($tablo);
 $pdf->AddPage('L','A4',0);
 
-$pdf->SetWidths(array(140,60,60));
+$pdf->SetWidths(array(140,90,30));
 
 
 $pdf->headerTable();
 $pdf->SetFont('Times','',12);
 foreach($tablo as $value){
     $pdf->Row(array(
-        $value[0],
+        utf8_decode($value[0]),
         $value[1],
-        $value[2],
+        number_format($value[2] , 1),
 
     ));
 

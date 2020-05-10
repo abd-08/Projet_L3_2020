@@ -57,12 +57,11 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
     $_SESSION['plagiat'] = $re;
     $_SESSION['texte'] = "<p>".$re[1]."</p>";
     $_SESSION['texte_2'] = "<p>".$re[2]."</p>";
-    $_SESSION['similitude'] =  number_format($re[0]/strlen($texte_1) , 2) ;
-     file_put_contents("pdf_generateur/copie.txt", "<p>".$re[1]."</p>");
-     file_put_contents("pdf_generateur/copie_2.txt", "<p>".$re[2]."</p>");
-     file_put_contents("pdf_generateur/similarite.txt","<p>".number_format($re[0]/strlen($mot) , 2)."</p>");
+    $_SESSION['similitude'] =  number_format($re[0]*100/strlen($texte_1) , 2) ;
+    $_SESSION['similitude_2'] =  number_format($re[0]*100/strlen($texte_2) , 2) ;
+
     echo "<section>";
-    echo "<h1>".number_format($re[0]/strlen($texte_1) , 2)."</h1>";
+    echo "<h1>".number_format($re[0]*100/strlen($texte_1) , 2)."</h1>";
 
 
     echo "<h5> Texte 1 </h5> ";
@@ -72,6 +71,8 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
 
     echo "<br/>";
 
+
+ echo "<h1>".number_format($re[0]*100/strlen($texte_2) , 2)."</h1>";
     echo "<h5> Texte 2 </h5> ";
     echo "<p class='test'>";
             echo $re[2];

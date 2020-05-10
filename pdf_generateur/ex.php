@@ -3,6 +3,7 @@ session_start();
 require('WriteTag.php');
 
 $similarite =$_SESSION['similitude'];
+$similarite_2 =$_SESSION['similitude_2'];
 $texte =  $_SESSION['texte'] ;
 $texte_2 =  $_SESSION['texte_2'] ;
 
@@ -45,14 +46,16 @@ $pdf->Ln(3);
 $pdf->SetLineWidth(0.1);
 $pdf->SetFillColor(255,255,204);
 $pdf->SetDrawColor(102,0,102);
-$pdf->WriteTag(0,5,$texte,1,"J",0,7);
+$pdf->WriteTag(0,5,utf8_decode($texte),1,"J",0,7);
 $pdf->Ln(5);
 
 
 $pdf->AddPage();
+$pdf->resultat($similarite_2);
+$pdf->Ln(10);
 $pdf->titre_paragraphe("Rendu du texte 2 :");
 $pdf->Ln(3);
-$pdf->WriteTag(0,5,$texte_2,1,"J",0,7);
+$pdf->WriteTag(0,5,utf8_decode($texte_2),1,"J",0,7);
 $pdf->Ln(5);
 
 
