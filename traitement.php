@@ -2,6 +2,59 @@
 //traitement de manière locale
 
 
+function tabsurligne($text , $balise_o , $balise_f){
+//on creer un tableau qui permet de connaitre le debut ou la fin d'une expression baliser
+    //tab[0] contient t[debut,fin] ; $debut contient le debut de l expression baliser et $fin sa fin
+    //entre $text : string ; $balise_o:string (le type d
+    //
+    //
+    //e balise ouvrant) ; $balise_f:string(le type de balise fermante)
+    //sortie : tableau n*2
+    $tab=[];
+    $substring=$text;
+    $length=strlen($substring);
+    $index=0;
+    $debut=strpos($substring,$balise_o);
+    while ($debut!=false){
+        $fin=strpos($substring, $balise_f);
+        if ($fin!=false){
+            array_push($tab,[$index+$debut,$index+$fin+strlen($balise_f)-1]);
+            $substring = substr($substring, $fin+7 ,$length-$fin);
+            $index=$index+$fin+strlen($balise_f);
+            $length=strlen($substring);
+            $debut=strpos($substring, $balise_o);
+        }
+        else{
+            array_push($tab,[$index+$debut,-1]);
+            $debut=false;
+        }
+    }
+    return$tab;
+}
+
+function lettre($position, $a, $b ,$tbalise  ){
+    if (($position>=$a && $position<$a+$tbalise) || ($position>=$b-$tbalise && $position<=$b) ) return  "balise";
+    else if(($position>=$a+$tbalise && $position<$b-$tbalise) || ($position>=$a+$tbalise && $tbalise==-1 )) return  "infecte";
+    else return "non-infecte";
+}
+
+function checkIndex($tab , $index , $tbalise ){
+    if (count($tab)>0){
+        for($i=0;$i<count($tab);$i++){
+            $a = $tab[$i][0];
+            $b = $tab[$i][1];
+            if ( lettre($index,$a,$b,$tbalise) =="balise"){
+                return "balise";
+            }
+            if ( lettre($index,$a,$b,$tbalise) =="infecte"){
+                return "infecte";
+            }
+        }
+    }
+    return "non-infecte";
+}
+
+
 
 function blockRecherche($html){
     //fonction qui renvoi un tableau a double dimension avec les blocks de resultat de recherche google
@@ -40,22 +93,6 @@ function motGras($chaine){
      return $trouve[1];
 }
 
-function recherchePhraseWeb($phrase){
-//fonction qui recherche une phrase sur internet et retourne l'html de la recherche google
-
-    $q = preg_replace("/[.,;:\/\?\!]/", ' ', $phrase); // on nettoi la ponctuation
-
-    preg_match("/\S.*\S/",$q,$trouve); //on supprime les espaces en debut et fin de phrase
-    $q = $trouve[0];
-
-    $q = preg_replace("/\s/","+",$q);//on ajoute les '+' aux endroits nécesssaire
-
-    $lien = "https://www.google.com/search?q=".$q;
-
-    return $html;
-
-
-}
 
 
 function compareStrings($s1, $s2) {

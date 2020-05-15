@@ -1,11 +1,11 @@
 function mode(idtext , idimg , mode, idBtn){
     var Texte = document.getElementById(idtext);
     var Image = document.getElementById(idimg);
-    var Bouton = document.getElementById(idBtn);
+    var MonBouton = document.getElementById(idBtn);
     //alert(formText.choix[1].value);
     if (mode == "texte"){
         Texte.style.visibility='visible';
-        Bouton.style.marginTop="-130px";
+        MonBouton.style.marginTop="-88px";
         Image.style.visibility='hidden';
         Image.style.marginTop="10px";
     }
@@ -13,7 +13,8 @@ function mode(idtext , idimg , mode, idBtn){
         Texte.style.visibility='hidden';
         Image.style.visibility='visible';
         Image.style.marginTop="-393px";
-        Bouton.style.marginTop="130px";
+        MonBouton.style.marginTop="5px";
+
     }
 }
 
