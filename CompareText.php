@@ -16,7 +16,7 @@
                     </label>
 
                     <label class="radioContainer"><h6>Image</h6>
-                        <input type="radio" name="choix" value="image" onclick="mode('text_1','im1','image','');" />
+                        <input type="radio" name="choix" value="image" onclick="mode('text_1','im1','image','vld');" />
                         <span class="circle"></span>
                     </label>
 
@@ -46,7 +46,6 @@
 		</div>
 
 	</div>
-	<br/>
 	</body>
 
 <?php include "footer.php"; ?>

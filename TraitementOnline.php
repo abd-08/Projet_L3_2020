@@ -352,7 +352,7 @@ function tronquer($texte,$n){
 function color_pourcentage($res)
 {
     if ($res >= 100) {
-        $res1 = "<p style='color: red'>100 %</p>";
+        $res1 = "<p style='color: red'>100%</p>";
     } else {
         if ($res <= 35) {
             $res1 =  "<p style='color: lime'>" . "$res" . "%" . "</p>";

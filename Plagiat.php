@@ -111,7 +111,7 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
     echo '<form action="pdf_generateur/ex.php" method="post" enctype="multipart/form-data">';
     echo ' <input type="hidden" name="var1" value="<?php '.$re[1].'?>"></input>';
     echo ' <input type="hidden" name="var2" value="<?php '.$re[2].'?>"></input>';
-    echo '<button type="submit"  formaction="pdf_generateur/ex.php" id="btn" class="btn mb-2">Generer un Pdf</button>';
+    echo '<button type="submit"  formaction="pdf_generateur/ex.php" id="btn" class="btn mb-2">Générer un Pdf</button>';
     echo  '</form>';
 
     echo "</section>";

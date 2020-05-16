@@ -46,9 +46,11 @@ include "header.php"; ?>
         $_SESSION["tableau"]=$varf;
         echo '<form action="pdf_generateur/Pdf_web.php" method="post" enctype="multipart/form-data">';
         echo "<br/>";
-        echo '<input type="submit" value="générer un pdf" id="btn" class="btn mb-2"/>';
+        echo '<input type="submit" value="Générer un pdf" id="btn" class="btn mb-2"/>';
         echo  '</form>';
         afficheFormeTab($varf);
+
+        echo "<br/>";
         ?>
     </section>
 

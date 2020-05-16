@@ -24,9 +24,9 @@ footer{
 textarea {
     padding: 12px 20px;
     box-sizing: border-box;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #f8f8f8;
+    background-color: white;
     outline: none;
     resize: none;
 }
@@ -41,9 +41,10 @@ a, a:hover{
 }
 
 .textCompare {
-    border: 2px solid #3445B6;
+    border: 1px solid #cccccc;
     padding: 5px;
-    border-radius: 8px;
+    border-radius: 5px;
+    background-color: white;
 }
 
 #index{
@@ -63,10 +64,19 @@ img{
     background-color: #3445B6;
     border-color: #3445B6;
 }
+
 #vld{margin-top: -69px;}
 
 .btn-outline-primary:hover {
     background-color: #3445B6;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    background-color: white;
+    border-color: #3445B6;
+    color: #3445B6;
 }
 
 #im1, #im2{
@@ -93,7 +103,7 @@ td {
     border: 1px solid ;
 }
 
-tr:nth-child(even) {background-color: #f2f2f2;}
+tr:nth-child(even) {background-color: #e8e8e8;}
 
 /*  CSS Pour le bouton radio de la page CompareText.php */
 
@@ -145,13 +155,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     top:50%;
     transform: translate(-50%, -50%);
 }
-/*  ******************** Fin style radio bouton *********************  */
 
 /************* Style de la progress circle bar **********************/
 
 .progress-circle {
     font-size: 20px;
-    position: relative; /* so that children can be absolutely positioned */
+    position: relative;
     padding: 0;
     width: 5em;
     height: 5em;
