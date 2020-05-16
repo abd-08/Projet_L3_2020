@@ -19,7 +19,6 @@
                 <div id="bloc" class="col-md-6">
                     <input type="submit" id="btn" value="Valider" class="btn mb-2"/>
                 </div>
-
 			</form>
 		</div>
 	</div>

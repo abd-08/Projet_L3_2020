@@ -10,16 +10,17 @@
 			<form id="formText" class="form-inline" action="plagiat.php" method="post" enctype="multipart/form-data">
 
 				<div id="block1" class="col-md-6" >
-                    <label class="radioContainer"><h6>Texte</h6>
-                        <input type="radio" name="choix" value="texte" onclick="mode('text_1','im1','texte', 'vld');" checked/>
-                        <span class="circle"></span>
-                    </label>
 
-                    <label class="radioContainer"><h6>Image</h6>
-                        <input type="radio" name="choix" value="image" onclick="mode('text_1','im1','image','vld');" />
-                        <span class="circle"></span>
-                    </label>
+              <label class="radioContainer"><h6>Texte</h6>
+                  <input type="radio" name="choix" value="texte" onclick="mode('text_1','im1','texte', 'vld');" checked/>
+                  <span class="circle"></span>
+              </label>
 
+              <label class="radioContainer"><h6>Image</h6>
+                  <input type="radio" name="choix" value="image" onclick="mode('text_1','im1','image','vld');" />
+                  <span class="circle"></span>
+              </label>
+ 
 					<textarea name="text_1" id="text_1" cols="50" rows="15"  placeholder="Entrez votre texte 1"></textarea>
 					<input type="file" id="im1" name="image_1" accept="image/*" class="form-control" />
 				</div>
@@ -44,7 +45,6 @@
 				</div>
 			</form>
 		</div>
-
 	</div>
 	</body>
 

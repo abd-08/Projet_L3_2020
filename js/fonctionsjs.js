@@ -14,7 +14,6 @@ function mode(idtext , idimg , mode, idBtn){
         Image.style.visibility='visible';
         Image.style.marginTop="-393px";
         MonBouton.style.marginTop="5px";
-
     }
 }
 

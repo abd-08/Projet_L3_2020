@@ -1,3 +1,4 @@
+
 body{
     background-color: #F6F5F7;
 }
@@ -19,6 +20,7 @@ footer{
     padding: 1px;
     width: 100%;
     background-color: white;
+
 }
 
 textarea {
@@ -65,7 +67,9 @@ img{
     border-color: #3445B6;
 }
 
+
 #vld{margin-top: -69px;}
+
 
 .btn-outline-primary:hover {
     background-color: #3445B6;
@@ -333,3 +337,4 @@ tr:nth-child(even) {background-color: #e8e8e8;}
 .progress-circle.p98 .value-bar { transform: rotate(353deg); }
 .progress-circle.p99 .value-bar { transform: rotate(356deg); }
 .progress-circle.p100 .value-bar { transform: rotate(360deg); }
+

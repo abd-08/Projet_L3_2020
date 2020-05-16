@@ -14,6 +14,10 @@ pour l'instant elle n'est pas utiliser
 Curl pour la capture de page web  =>  composer require curl/curl
 
 
-Premiere commit projet web
+FPDF bibliothèque permettant de créer un pdf
+FPDF    =>    composer require fpdf/fpdf
+
+
+
 
 

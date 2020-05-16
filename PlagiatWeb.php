@@ -1,20 +1,6 @@
 <?php
 session_start();
 include "header.php"; ?>
-<!DOCTYPE html>
-<html>
-<head>
-
-    <title>Exemple de code HTML5</title>
-
-        <link rel="stylesheet" type="text/css" href="css/default.css"/>
-                <!--[if IE]><link rel="stylesheet" type="text/css" href="css/default-ie.css" /><![endif]-->
-
-        <!-- Empêcher la mise en cache de la page par le navigateur -->
-        <meta http-equiv="pragma" content="no-cache" />
-        <meta charset="ISO-8859-1">
-
-</head>
 
 <body>
 
@@ -36,7 +22,6 @@ include "header.php"; ?>
                 $texte_2 = CVTexte($file_name);//utilisation de cloud vision pour recuperer le texte
             }
             else $texte1 = "VIDE";
-
         }
 
         echo "<br/>";
@@ -53,8 +38,8 @@ include "header.php"; ?>
         echo "<br/>";
         ?>
     </section>
-
 </body>
+
 
 
 <?php  include "footer.php"; ?>
