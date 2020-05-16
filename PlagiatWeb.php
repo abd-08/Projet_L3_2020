@@ -1,22 +1,6 @@
 <?php
 session_start();
 include "header.php"; ?>
-<!DOCTYPE html>
-<html>
-<head>
-
-    <title>Exemple de code HTML5</title>
-
-        <link rel="stylesheet" type="text/css" href="css/default.css"/>
-                <!--[if IE]><link rel="stylesheet" type="text/css" href="css/default-ie.css" /><![endif]-->
-
-        <!-- Empêcher la mise en cache de la page par le navigateur -->
-        <meta http-equiv="pragma" content="no-cache" />
-        <meta charset="ISO-8859-1">
-
-</head>
-
-
 
 <section>
 
@@ -44,10 +28,19 @@ else{
 
 echo "<br/>";
 echo "<h4> Resultat recherche web  </h4> ";
-
-
-
 $varf =rechercheTexteWeb($texte1);
+
+$res=0;
+for($i=0;$i<count($varf);$i++){
+	$res = $varf[$i][2]+$res;
+}
+$res =$res / count($varf);
+$res =  number_format($res , 1);
+echo "<h1  style=' text-align: center;'>Plagiat : ".$res."% </h1>";
+
+
+echo $texte1."<br/><br/>";
+
 $_SESSION["tableau"]=$varf;
 echo '<form action="pdf_generateur/Pdf_web.php" method="post" enctype="multipart/form-data">';
 

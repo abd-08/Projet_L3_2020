@@ -8,7 +8,7 @@
 				<div id="block1" class="col-md-6">
 					<h5>Entrez votre texte afin de faire la recherche sur internet : </h5>
 					<textarea name="text_1" cols="54" rows="11"></textarea>
-					<input type="submit" value="Valider" class="btn mb-2"/>
+					<input type="submit" value="Valider" class="btn mb-2"  id="btn"/>
 				</div>
 
 

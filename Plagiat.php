@@ -13,7 +13,6 @@ require "vendor/autoload.php";
 
 
 
-
 $choix  = $_POST['choix'];
 $choix2  = $_POST['choix2'];
 
@@ -40,18 +39,6 @@ else {
 
 
 
-$mot =  "Alors que certains hommes mentionnaient que leur sexualité était cachée à leurs connaissances ou à leurs collègues de travail, tous les participants ont systématiquement reconnu la stigmatisation de l’homosexualité dans les cultures traditionnelles asiatiques du Pacifique et ont adapté leur expression personnelle à ces paramètres. En tant que tel, la compartimentation de l’identité homosexuelle dans le contexte familial était commune. Cependant, les personnes interrogées ne considéraient pas que leur identité sexuelle était comparée à leur identité ethnique pour se «fermer» elles-mêmes. Ils considéraient que l’action protégeait les membres de la famille contre le sujet tabou de la sexualité.";
-$mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des connaissances ou à des collègues, mais tous les participants ont reconnu avoir éprouvé une sorte de stigmatisation de l’homosexualité dans leurs cultures traditionnelles. La plupart ont dit qu’ils ont adapté leur auto-expression pour s’adapter à ces paramètres. Ils ont donc comparé leur identité homosexuelle lorsqu’ils étaient en famille.Cependant , de nombreux participants ne considéraient pas cela comme une «fermeture» eux-mêmes; ils le considéraient plutôt comme un moyen de protéger les membres de la famille contre des sujets tabous.";
-
-
-
-   /* $texte1= $_POST['text_1'];
-    $texte2= $_POST['text_2'];
-    file_put_contents("pdf_generateur/copie.txt", $texte1);
-    file_put_contents("pdf_generateur/copie2.txt", $texte2);*/
-
-
-
     $re = compareMot2($texte_1, $texte_2);
 
     $_SESSION['plagiat'] = $re;
@@ -60,8 +47,8 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
     $_SESSION['similitude'] =  number_format($re[0]*100/strlen($texte_1) , 2) ;
     $_SESSION['similitude_2'] =  number_format($re[0]*100/strlen($texte_2) , 2) ;
 
-    echo "<section>";
-    echo "<h1>".number_format($re[0]*100/strlen($texte_1) , 2)."</h1>";
+    echo "<section >";
+    echo "<h1  style=' text-align: center;'>Plagiat : ".number_format($re[0]*100/strlen($texte_1) , 2)."% </h1>";
 
 
     echo "<h5> Texte 1 </h5> ";
@@ -72,7 +59,7 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
     echo "<br/>";
 
 
- echo "<h1>".number_format($re[0]*100/strlen($texte_2) , 2)."</h1>";
+ echo "<h1 style=' text-align: center;'> Plagiat : ".number_format($re[0]*100/strlen($texte_2) , 2)."% </h1>";
     echo "<h5> Texte 2 </h5> ";
     echo "<p class='test'>";
             echo $re[2];

@@ -65,20 +65,17 @@ img{
     margin-bottom: 10px;
 }
 
-.btn{
+#btn,#vld{
     color: #fff;
     background-color: #3445B6;
     border-color: #3445B6;
 }
 
+
+.btn-outline-primary:hover {
+    background-color: #3445B6;
+}
+
 #im1, #im2{
     visibility: hidden;
-}
-
-#vld{
-    margin-top: -138px
-}
-
-#im1{
-
 }
