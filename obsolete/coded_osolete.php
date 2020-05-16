@@ -120,7 +120,7 @@ require_once 'vendor/autoload.php';
 
 $client = new Google_Client();
 $client->setApplicationName("Client_Library_Examples");
-$client->setDeveloperKey("AIzaSyBG-bIzmyyIrP_pu8bG8Oh8U_-X_zCMTIA");
+$client->setDeveloperKey("XXXXXXX");
 
 $service = new Google_Service_Books($client);
 $optParams = array('filter' => 'free-ebooks');
