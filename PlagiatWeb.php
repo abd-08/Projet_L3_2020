@@ -49,7 +49,7 @@ include "header.php"; ?>
         echo '<input type="submit" value="Générer un pdf" id="btn" class="btn mb-2"/>';
         echo  '</form>';
         afficheFormeTab($varf);
-
+        
         echo "<br/>";
         ?>
     </section>

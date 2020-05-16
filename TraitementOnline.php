@@ -381,6 +381,7 @@ function afficheFormeTab($tres){
               echo  '<td>'.$lien.'</td>';
                 echo '<td>'.'<b>'.color_pourcentage($percent).'</b>'.'</td> </tr>';
     }
+
     echo '</tbody></table>';
 }
 

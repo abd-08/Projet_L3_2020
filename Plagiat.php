@@ -96,6 +96,7 @@ $mop ="Certains hommes ont dit qu’ils dissimulaient leur sexualité à des con
     echo "<br/>";
 
 
+
     echo "<h6> Paragraphe 1 : </h6> ";
     echo "<p class='textCompare'>";
         echo $re[1] ;
