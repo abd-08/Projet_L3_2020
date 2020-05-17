@@ -396,9 +396,7 @@ function tronquer($texte,$n){
 
 function color_pourcentage($res)
 {
-    if ($res >= 100) {
-        $res1 = "<p style='color: red'>100%</p>";
-    } else {
+
         if ($res <= 35) {
             $res1 =  "<p style='color: lime'>" . "$res" . "%" . "</p>";
         } elseif ($res > 35 && $res <= 65) {
@@ -406,7 +404,7 @@ function color_pourcentage($res)
         } else {
             $res1 = "<p style='color: red'>" . "$res" . "%" . "</p>";
         }
-    }
+
     return $res1;
 }
 
@@ -438,7 +436,7 @@ function afficheFormeTab($tres){
     echo "<th> Plagiat </th> </tr>  </thead> <tbody> ";
 
     for ( $i=0 ; $i<count($tres) ; $i++){
-        $percent = number_format($tres[$i][2], 2)*100;
+        $percent = number_format($tres[$i][2], 2);
         echo ' <tr>  <td >'.tronquer($tres[$i][0],120).'</td>';
         $lien = '<a href='.$tres[$i][1].' target="_blank" >'.tronquer($tres[$i][1],30).'</a>';
         echo  '<td>'.$lien.'</td>';
