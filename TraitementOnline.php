@@ -14,11 +14,11 @@ function blockRechercheR($html){
 
 function recupereLienR($chaine){
     //on recupère le lien dans une chaine de caractère
-     $regex = "/url\?q=(((https?|ftp):\/\/(w{3}\.)?)(?<!www)(\w+-?)*\.([a-z]{2,4})(\S*?))\&amp/" ;
-     if ( preg_match($regex,$chaine,$trouve) ){
+    $regex = "/url\?q=(((https?|ftp):\/\/(w{3}\.)?)(?<!www)(\w+-?)*\.([a-z]{2,4})(\S*?))\&amp/" ;
+    if ( preg_match($regex,$chaine,$trouve) ){
         return $trouve[1];
-     }
-     else return "";
+    }
+    else return "";
 }
 
 
@@ -28,7 +28,7 @@ function array_concat($tableau){
     for ($i=0;$i<count($tableau);$i++){
         $res=$res." ".$tableau[$i];
     }
-return $res;
+    return $res;
 }
 
 function preContenuAmeliorer($chaine){
@@ -41,11 +41,11 @@ function preContenuAmeliorer($chaine){
 
 function entreAvance($chaine){
     //on recupère le texte de recherche de la page recherche de google
-       $regex = "/<title>(.*?)\-\sRecherche\sGoogle<\/title>/" ;
-        if ( preg_match($regex,$chaine,$trouve) ){
-                return $trouve[1];
-             }
-       else return "";
+    $regex = "/<title>(.*?)\-\sRecherche\sGoogle<\/title>/" ;
+    if ( preg_match($regex,$chaine,$trouve) ){
+        return $trouve[1];
+    }
+    else return "";
 }
 
 
@@ -99,7 +99,7 @@ function selectBetterlinkAvance($phrase){
     }
 
 
-     for ($i=0; $i<count($tableau_recheche); $i++){
+    for ($i=0; $i<count($tableau_recheche); $i++){
 
         $contenu = preContenuAmeliorer($tableau_recheche[$i]);
         $similarite = compareMot( $entre , $contenu )*100;
@@ -107,22 +107,22 @@ function selectBetterlinkAvance($phrase){
             $lien = recupereLienR($tableau_recheche[$i]);
             $resultat=[$phrase, $lien , $similarite ];
         }
-     }
+    }
 
 
-if ($resultat[2]<0.15){
-    $html = recherchePhraseWebR($phrase);
-    $entre = entreAvance($html);
-    $tableau_recheche_2 = blockRechercheR($html);
+    if ($resultat[2]<0.15){
+        $html = recherchePhraseWebR($phrase);
+        $entre = entreAvance($html);
+        $tableau_recheche_2 = blockRechercheR($html);
 
-     $contenu2 = preContenuAmeliorer($tableau_recheche_2[0]);
-     $similarite2 = compareMot( $entre , $contenu2 );
-     if ($similarite2 > $resultat[1]){
-          $lien2 = recupereLienR($tableau_recheche_2[0]);
-          $resultat=[ $phrase , $lien2 , $similarite2*100];
-     }
- }
-     return $resultat;
+        $contenu2 = preContenuAmeliorer($tableau_recheche_2[0]);
+        $similarite2 = compareMot( $entre , $contenu2 );
+        if ($similarite2 > $resultat[1]){
+            $lien2 = recupereLienR($tableau_recheche_2[0]);
+            $resultat=[ $phrase , $lien2 , $similarite2*100];
+        }
+    }
+    return $resultat;
 }
 
 
@@ -157,14 +157,17 @@ function compareMot2($s1,$s2){
     $tableau_mot_anexe = recupere_mot_tableau($tableau_mot);
     $tableau_mot_2_anexe = recupere_mot_tableau($tableau_mot_2);
 
-    $result = array_uintersect($tableau_mot_anexe, $tableau_mot_2_anexe , 'strcasecmp'); // on cree un tableau avec le terme commun de deucx phrases
-    array_unshift($result , ""); ////insertion de "" en debut de tableau
+    // $result = array_uintersect($tableau_mot_anexe, $tableau_mot_2_anexe , 'strcasecmp'); // on cree un tableau avec le terme commun de deucx phrases
+    //array_unshift($result , ""); ////insertion de "" en debut de tableau
 
-
+    $result = croisement_tableau($tableau_mot_anexe, $tableau_mot_2_anexe);
+/*    var_dump($tableau_mot);
+    var_dump($tableau_mot_2);
+    var_dump($result);*/
     $similarite =nombreChar(array_values($result))+count($result)-2;
 
     return [ $similarite , surligner_phrase($tableau_mot,$tableau_mot_anexe,$result),
-                    surligner_phrase($tableau_mot_2,$tableau_mot_2_anexe,$result)];
+        surligner_phrase($tableau_mot_2,$tableau_mot_2_anexe,$result)];
 }
 
 function est_char_special($char){
@@ -172,7 +175,7 @@ function est_char_special($char){
 //entre string
 //Sortie booleen
     $liste_char=["é", "è", "ê", "ë", "à", "â", "î", "ï", "ô", "ù", "û", "ü", "ÿ", "æ", "œ" ,"ç",
-                    "Â", "Ê", "Î", "Ô", "Û", "Ä", "Ë", "Ï", "Ö", "Ü", "À", "Æ", "æ", "Ç", "É", "È", "Œ","œ", "Ù"];
+        "Â", "Ê", "Î", "Ô", "Û", "Ä", "Ë", "Ï", "Ö", "Ü", "À", "Æ", "æ", "Ç", "É", "È", "Œ","œ", "Ù"];
     if (strlen($char)==2)  return in_array($char,$liste_char);
     return false;
 }
@@ -217,13 +220,46 @@ function recupere_mot($chaine){
     return  strtolower(substr($chaine, $debut, $fin-$debut));
 }
 
+function est_dans($value , $tableau){
+    //fonction qui vérifie si un élément est présent dan sun tableau insensible à la casse
+    //entrée   value:string  ,tableau:array<string>
+    //sortie if true [true , tableau] (tableau = tableau moin value)
+    //sortie if false [false]
+    for ($i=0;$i<count($tableau);$i++){
+        if ( strcasecmp( $value ,$tableau[$i])==0 ) {
+            unset($tableau[$i]);
+            $tableau = array_values($tableau);
+            return [true,$tableau,$i];
+        }
+    }
+    return [false];
+}
+
+
+function croisement_tableau($tableau , $tableau_2){
+    //fonction qui nous renvoie l'intersection de 2 tableau insensible à la casse
+    //entre :$tableau array<string> , $tableau_2 array<string>
+    //sortie : array<string>
+
+    $res=[""];
+    $tableau_2_anexe = $tableau_2;
+    for ($i=0;$i<count($tableau);$i++){
+        $est_dans = est_dans($tableau[$i], $tableau_2_anexe);
+        if ( $est_dans[0]){
+            array_push($res,$tableau[$i]);
+            $tableau_2_anexe = $est_dans[1];
+        }
+    }
+    return $res;
+}
+
 function recupere_mot_tableau($tableau){
     //fonction qui récupere un tableau de string et applique la fonction recupere_mot sur chaque element
     //entre : tableau de string
     //sortie : tableau de string
     $tableau_res=[];
     for ($i=0;$i<count($tableau);$i++){
-         array_push($tableau_res , recupere_mot($tableau[$i]));
+        array_push($tableau_res , recupere_mot($tableau[$i]));
     }
     return $tableau_res;
 }
@@ -235,41 +271,30 @@ function est_meme_famille($mot , $compare){
 }
 
 function marquer_mot($mot_regex , $mot ){
-  return str_replace($mot," <mark>".$mot."</mark>",$mot_regex);
+    return str_replace($mot," <mark>".$mot."</mark>",$mot_regex);
 }
 
-function array_similaire($tab , $tab2){
-    $tableau_res=[];
-    for($i=0;$i<count($tab);$i++){
-        $index = array_search($tab[$i],$tab2);
-        if ($index!=FALSE){
-            array_push($tableau_res,$tab[$i]);
-            unset($tab2[$index]);
-            $array = array_values($tab2);
-        }
-    }
-return $tab;
-}
+
 
 function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
 //fonction qui surligne les mots
 //entre phrase_tab : tableau de string  ; mot_a_souligner : tableau de string
 //sortie string
 
- $phrase_resultat="";
- for ($i=0;$i<count($phrase_tab);$i++){
-     $index = array_search($phrase_tab_anexe[$i],$mot_a_souligner);
+    $phrase_resultat="";
 
-    if ($index>0 ){
-        //unset($mot_a_souligner[$index]);
-        $mot_a_souligner = array_values($mot_a_souligner);
-        $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );
+    for ($i=0;$i<count($phrase_tab);$i++){
+        $res = est_dans($phrase_tab_anexe[$i],$mot_a_souligner );
+        //  $index = array_search($phrase_tab_anexe[$i],$mot_a_souligner_annexe);
+
+        if ($res[0]){
+            unset($mot_a_souligner[$res[2]]);
+            $mot_a_souligner  = array_values($mot_a_souligner );
+            $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );
+        }
+        else $phrase_resultat = $phrase_resultat." ".$phrase_tab[$i];
     }
-    else $phrase_resultat = $phrase_resultat." ".$phrase_tab[$i];
-
-
- }
- return $phrase_resultat;
+    return $phrase_resultat;
 
 }
 
@@ -286,18 +311,18 @@ function rechercheTexteWeb($texte){
     if(!array_search($der , ['!','.','?',':'])) $texte=$texte.'.';
 
     //on decoupe le texte en phrase
-     preg_match_all("/[^\.\?\!\:]*?[\.\?\!\:]/",$texte ,$tab);
-     $tableau = $tab[0];
+    preg_match_all("/[^\.\?\!\:]*?[\.\?\!\:]/",$texte ,$tab);
+    $tableau = $tab[0];
 
 
 
     //on construit un tableau a double dimension avec le lien qui se rapproche le plus a la phrase recherché ainsi que sa similarité
     $resultat=[];
     for ($i=0; $i<count($tableau); $i++){
-    if (strlen($tableau[$i]) >10 ) array_push($resultat, selectBetterlinkAvance($tableau[$i]));
-     }
+        if (strlen($tableau[$i]) >10 ) array_push($resultat, selectBetterlinkAvance($tableau[$i]));
+    }
 
-      return $resultat;
+    return $resultat;
 }
 
 
@@ -335,9 +360,9 @@ function interpretationResultat($tableau_resultat ,$tableau_phrase){
 
 function rechercheWebavance($tab){
     $bloc= $tab[0] ;
-     $lien = $tab[1];
-     $site = file_get_contents($lien);
-     return similar_text($bloc, $site)/strlen($bloc);
+    $lien = $tab[1];
+    $site = file_get_contents($lien);
+    return similar_text($bloc, $site)/strlen($bloc);
 }
 
 
@@ -351,7 +376,7 @@ function nombreChar($tableau){
     for ($i=0;$i<count($tableau);$i++){
         $res = $res + strlen($tableau[$i]);
     }
-   return $res;
+    return $res;
 }
 
 
@@ -369,23 +394,58 @@ function tronquer($texte,$n){
     else return $texte;
 }
 
+function color_pourcentage($res)
+{
+    if ($res >= 100) {
+        $res1 = "<p style='color: red'>100%</p>";
+    } else {
+        if ($res <= 35) {
+            $res1 =  "<p style='color: lime'>" . "$res" . "%" . "</p>";
+        } elseif ($res > 35 && $res <= 65) {
+            $res1 =  "<p style='color: darkorange'>" . "$res" . "%" . "</p>";
+        } else {
+            $res1 = "<p style='color: red'>" . "$res" . "%" . "</p>";
+        }
+    }
+    return $res1;
+}
+
+//function afficheFormeTab($tres){
+////procedure qui affiche un tableau à de type i*3 visuelement
+//// entre : un tableau a deux dimension
+//
+//    echo "<table style='font: 100% sans-serif;  border-collapse: collapse; empty-cells: show; border: 1px solid #7a7;'>";
+//    echo  " <thead style='background-color: #efe; height: 50px;'>  <tr> <th style=' text-align: center;height: 50px;'> phrase </th> ";
+//    echo " <th style=' text-align: center;border: 1px solid #7a7; height: 50px;'> source </th>";
+//    echo "<th style=' text-align: center; height: 50px;'> plagiat </th> </tr>  </thead> <tbody> ";
+//
+//    for ( $i=0 ; $i<count($tres) ; $i++){
+//        echo ' <tr style ="border: 1px solid #7a7;">  <td >'.$tres[$i][0].'</td>';
+//        $lien = '<a style ="color: rgb(0,5,0);" href='.$tres[$i][1].'>'.tronquer($tres[$i][1],30).'</a>';
+//        echo  '<td style ="color: rgb(0,5,0);font-color:#efe;border: 1px solid #7a7;">'.$lien.'</td>';
+//        echo '<td>'.number_format($tres[$i][2], 1)."%".'</td> </tr>';
+//    }
+//    echo '</tbody></table>';
+//
+//}
 function afficheFormeTab($tres){
 //procedure qui affiche un tableau à de type i*3 visuelement
 // entre : un tableau a deux dimension
 
-    echo "<table style='font: 100% sans-serif;  border-collapse: collapse; empty-cells: show; border: 1px solid #7a7;'>";
-    echo  " <thead style='background-color: #efe; height: 50px;'>  <tr> <th style=' text-align: center;height: 50px;'> phrase </th> ";
-    echo " <th style=' text-align: center;border: 1px solid #7a7; height: 50px;'> source </th>";
-    echo "<th style=' text-align: center; height: 50px;'> plagiat </th> </tr>  </thead> <tbody> ";
+    echo "<table>";
+    echo  " <thead>  <tr> <th> Phrase </th> ";
+    echo " <th> Source </th>";
+    echo "<th> Plagiat </th> </tr>  </thead> <tbody> ";
 
     for ( $i=0 ; $i<count($tres) ; $i++){
-        echo ' <tr style ="border: 1px solid #7a7;">  <td >'.$tres[$i][0].'</td>';
-              $lien = '<a style ="color: rgb(0,5,0);" href='.$tres[$i][1].'>'.tronquer($tres[$i][1],30).'</a>';
-              echo  '<td style ="color: rgb(0,5,0);font-color:#efe;border: 1px solid #7a7;">'.$lien.'</td>';
-                echo '<td>'.number_format($tres[$i][2], 1)."%".'</td> </tr>';
+        $percent = number_format($tres[$i][2], 2)*100;
+        echo ' <tr>  <td >'.tronquer($tres[$i][0],120).'</td>';
+        $lien = '<a href='.$tres[$i][1].' target="_blank" >'.tronquer($tres[$i][1],30).'</a>';
+        echo  '<td>'.$lien.'</td>';
+        echo '<td>'.'<b>'.color_pourcentage($percent).'</b>'.'</td> </tr>';
     }
-    echo '</tbody></table>';
 
+    echo '</tbody></table>';
 }
 
 
