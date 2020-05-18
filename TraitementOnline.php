@@ -161,8 +161,8 @@ function compareMot2($s1,$s2){
     //array_unshift($result , ""); ////insertion de "" en debut de tableau
 
     $result = croisement_tableau($tableau_mot_anexe, $tableau_mot_2_anexe);
-/*    var_dump($tableau_mot);
-    var_dump($tableau_mot_2);
+    /*var_dump($tableau_mot_anexe);
+    var_dump($tableau_mot_2_anexe);
     var_dump($result);*/
     $similarite =nombreChar(array_values($result))+count($result)-2;
 
@@ -271,7 +271,12 @@ function est_meme_famille($mot , $compare){
 }
 
 function marquer_mot($mot_regex , $mot ){
-    return str_replace($mot," <mark>".$mot."</mark>",$mot_regex);
+
+    $regex = "/[a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]((\S)*([a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]))?/";
+   if ( preg_match($regex , $mot_regex , $mot_anexe) ){
+       if (strcasecmp($mot_anexe[0],$mot) == 0)  return str_replace($mot_regex," <mark>".$mot_anexe[0]."</mark>",$mot_regex);
+   }
+    else return $mot_regex;
 }
 
 
@@ -288,6 +293,7 @@ function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
         //  $index = array_search($phrase_tab_anexe[$i],$mot_a_souligner_annexe);
 
         if ($res[0]){
+           // var_dump($phrase_tab_anexe[$i]);
             unset($mot_a_souligner[$res[2]]);
             $mot_a_souligner  = array_values($mot_a_souligner );
             $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );

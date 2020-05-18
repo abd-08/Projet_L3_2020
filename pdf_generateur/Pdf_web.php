@@ -199,7 +199,7 @@ $pdf->headerTable();
 $pdf->SetFont('Times','',12);
 foreach($tablo as $value){
     $pdf->Row(array(
-        utf8_decode($value[0]),
+        $value[0],
         $value[1],
         number_format($value[2] , 1),
 
