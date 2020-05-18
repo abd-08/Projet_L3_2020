@@ -4,16 +4,18 @@ use Google\Cloud\Vision\VisionClient;
 
 
 function blockRechercheR($html){
-    //fonction qui renvoi un tableau avec les blocks de resultat de recherche google
-    //entre string
-    //sortie string
+//fonction qui renvoi un tableau avec les blocks de resultat de recherche google
+//entre string
+//sortie string
     $regex = "/\sxpd\sO9g5cc\suUPGi\"><div\sclass=\"kCrYT(.*?)url([\s\S]*?)(ZINbbc|mCljob)/i";
     preg_match_all($regex,$html,$tableau,PREG_PATTERN_ORDER);
     return $tableau[0];
 }
 
 function recupereLienR($chaine){
-    //on recupère le lien dans une chaine de caractère
+//on recupère le lien dans une chaine de caractère
+//entre    chaine:string
+//sortie string
     $regex = "/url\?q=(((https?|ftp):\/\/(w{3}\.)?)(?<!www)(\w+-?)*\.([a-z]{2,4})(\S*?))\&amp/" ;
     if ( preg_match($regex,$chaine,$trouve) ){
         return $trouve[1];
@@ -24,6 +26,8 @@ function recupereLienR($chaine){
 
 function array_concat($tableau){
 //fonction qui concatène tout les element string d'un tableau
+//entre    $tableau : array<String>
+//sortie    string
     $res="";
     for ($i=0;$i<count($tableau);$i++){
         $res=$res." ".$tableau[$i];
@@ -33,6 +37,8 @@ function array_concat($tableau){
 
 function preContenuAmeliorer($chaine){
 // Recupère le contenu texte de chaque block resultat de recherche
+//entre    chaine:string
+//sortie string
     preg_match_all("/>([^><]{2,}?)</",$chaine ,$tab);
     $contenu = array_concat($tab[1]);
     return $contenu;
@@ -40,7 +46,10 @@ function preContenuAmeliorer($chaine){
 
 
 function entreAvance($chaine){
-    //on recupère le texte de recherche de la page recherche de google
+//on recupère le texte de recherche de la page recherche de google , car on pourrait avoir une modification de la recherche en cours de route
+//entrée    chaine :string
+//sortie   string
+
     $regex = "/<title>(.*?)\-\sRecherche\sGoogle<\/title>/" ;
     if ( preg_match($regex,$chaine,$trouve) ){
         return $trouve[1];
@@ -49,25 +58,11 @@ function entreAvance($chaine){
 }
 
 
-function recherchePhraseWebR($phrase){
-//fonction qui recherche une phrase sur internet et retourne l'html de la recherche google
-
-    $q = preg_replace("/[.,;:\/\?\!]/", ' ', $phrase); // on nettoi la ponctuation
-
-    preg_match("/\S.*\S/",$q,$trouve); //on supprime les espaces en debut et fin de phrase
-    $q = $trouve[0];
-
-    $q = preg_replace("/\s/","+",$q);//on ajoute les '+' aux endroits nécesssaire
-
-    $lien = "https://www.google.com/search?q=".$q; // on  construit le lien de recherche google
-
-    $html = file_get_contents($lien);//a la place d utiliser curl
-    return   utf8_decode($html);
-}
-
 
 function recherchePhraseWebAvance($phrase){
 //fonction qui recherche une phrase sur internet et retourne l'html de la recherche google
+//entre    phrase:string
+//sortie    string(html)
 
     $q = preg_replace("/[.,;:\/\?\!]/", ' ', $phrase); // on nettoi la ponctuation
 
@@ -85,7 +80,9 @@ function recherchePhraseWebAvance($phrase){
 
 function selectBetterlinkAvance($phrase){
     //on va séléctionner le lien qui a un contenu qui match le plus avec la phrase entrée
-    //le résultat est sous forme de tableau avec le lien en t[0] et le pourcentage de similarite en t[1]
+    //le résultat est sous forme de tableau avec la phrase en t[0], le lien en t[1] et le pourcentage de similarite en t[2]
+    //entre     phrase :string
+    //sortie    array [phrase:sting , lien:string , similarite:float]
 
     $html = recherchePhraseWebAvance($phrase);
     $entre = entreAvance($html);
@@ -100,26 +97,11 @@ function selectBetterlinkAvance($phrase){
 
 
     for ($i=0; $i<count($tableau_recheche); $i++){
-
         $contenu = preContenuAmeliorer($tableau_recheche[$i]);
         $similarite = compareMot( $entre , $contenu )*100;
         if ( $similarite > $resultat[2] ){
             $lien = recupereLienR($tableau_recheche[$i]);
             $resultat=[$phrase, $lien , $similarite ];
-        }
-    }
-
-
-    if ($resultat[2]<0.15){
-        $html = recherchePhraseWebR($phrase);
-        $entre = entreAvance($html);
-        $tableau_recheche_2 = blockRechercheR($html);
-
-        $contenu2 = preContenuAmeliorer($tableau_recheche_2[0]);
-        $similarite2 = compareMot( $entre , $contenu2 );
-        if ($similarite2 > $resultat[1]){
-            $lien2 = recupereLienR($tableau_recheche_2[0]);
-            $resultat=[ $phrase , $lien2 , $similarite2*100];
         }
     }
     return $resultat;
@@ -137,15 +119,14 @@ function compareMot($s1,$s2){
     $s2clean = preg_split("/\s?[\.\?\!\:\s]\s?/",$s2);
     $tabm = recupere_mot_tableau($s1clean);
     $tabm2 = recupere_mot_tableau($s2clean);
-    //$result = array_intersect($tabm, $tabm2);//insertion en debut de tableau
-    $result = array_uintersect($tabm, $tabm2 , 'strcasecmp');
+    $result = croisement_tableau($tabm, $tabm2);
     return nombreChar(array_values($result)) /nombreChar($s1clean);
 }
 
 
 
 function compareMot2($s1,$s2){
-    //on compare 2 chaines de caractère et on renvoi le pourcentage de similarite
+    //on compare 2 chaines de caractère et on renvoi le pourcentage de similarite ainsi que le resultat surligner de chaque phrase
     //entre S1,S2 string
     //sortie tab = [float similarite  , string phrase  , string phrase2 ]
     $s1=str_replace(".",". ",$s1);
@@ -157,18 +138,13 @@ function compareMot2($s1,$s2){
     $tableau_mot_anexe = recupere_mot_tableau($tableau_mot);
     $tableau_mot_2_anexe = recupere_mot_tableau($tableau_mot_2);
 
-    // $result = array_uintersect($tableau_mot_anexe, $tableau_mot_2_anexe , 'strcasecmp'); // on cree un tableau avec le terme commun de deucx phrases
-    //array_unshift($result , ""); ////insertion de "" en debut de tableau
-
     $result = croisement_tableau($tableau_mot_anexe, $tableau_mot_2_anexe);
-    /*var_dump($tableau_mot_anexe);
-    var_dump($tableau_mot_2_anexe);
-    var_dump($result);*/
     $similarite =nombreChar(array_values($result))+count($result)-2;
 
     return [ $similarite , surligner_phrase($tableau_mot,$tableau_mot_anexe,$result),
         surligner_phrase($tableau_mot_2,$tableau_mot_2_anexe,$result)];
 }
+
 
 function est_char_special($char){
 //fonction qui verifie si un caractère est accentuer
@@ -220,6 +196,7 @@ function recupere_mot($chaine){
     return  strtolower(substr($chaine, $debut, $fin-$debut));
 }
 
+
 function est_dans($value , $tableau){
     //fonction qui vérifie si un élément est présent dan sun tableau insensible à la casse
     //entrée   value:string  ,tableau:array<string>
@@ -253,6 +230,7 @@ function croisement_tableau($tableau , $tableau_2){
     return $res;
 }
 
+
 function recupere_mot_tableau($tableau){
     //fonction qui récupere un tableau de string et applique la fonction recupere_mot sur chaque element
     //entre : tableau de string
@@ -265,12 +243,11 @@ function recupere_mot_tableau($tableau){
 }
 
 
-function est_meme_famille($mot , $compare){
-    $nombre = similar_text($mot , $compare);
-    return $nombre > min(strlen($mot) , strlen($compare))-3;
-}
 
 function marquer_mot($mot_regex , $mot ){
+    //fonction qui va nous permettre de marquer un mot insensible à la casse
+    //entre      mot_regex:string   ; mot:string
+    //sortie  string
 
     $regex = "/[a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]((\S)*([a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]))?/";
    if ( preg_match($regex , $mot_regex , $mot_anexe) ){
@@ -287,21 +264,16 @@ function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
 //sortie string
 
     $phrase_resultat="";
-
     for ($i=0;$i<count($phrase_tab);$i++){
-        $res = est_dans($phrase_tab_anexe[$i],$mot_a_souligner );
-        //  $index = array_search($phrase_tab_anexe[$i],$mot_a_souligner_annexe);
-
-        if ($res[0]){
-           // var_dump($phrase_tab_anexe[$i]);
-            unset($mot_a_souligner[$res[2]]);
-            $mot_a_souligner  = array_values($mot_a_souligner );
-            $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );
+        $res = est_dans($phrase_tab_anexe[$i],$mot_a_souligner ); //on verifie si un mot est à souligner
+        if ($res[0]){///true
+            unset($mot_a_souligner[$res[2]]);//on supprime le mot qu'on va souligner
+            $mot_a_souligner  = array_values($mot_a_souligner );//on récupère le nouveau tableau
+            $phrase_resultat = $phrase_resultat.marquer_mot($phrase_tab[$i] , $phrase_tab_anexe[$i] );//on marque le mot en question
         }
         else $phrase_resultat = $phrase_resultat." ".$phrase_tab[$i];
     }
     return $phrase_resultat;
-
 }
 
 
@@ -311,6 +283,8 @@ function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
 
 function rechercheTexteWeb($texte){
 //on va recuperer un tableau contenant le pourcentage de similarite d'une phrase
+    //entre      texte:string
+    //sortie   array<>
 
     //on rajoute une ponctuation a la fin du texte si elle est inexistante
     $der=$texte[strlen($texte)-1];
@@ -319,8 +293,6 @@ function rechercheTexteWeb($texte){
     //on decoupe le texte en phrase
     preg_match_all("/[^\.\?\!\:]*?[\.\?\!\:]/",$texte ,$tab);
     $tableau = $tab[0];
-
-
 
     //on construit un tableau a double dimension avec le lien qui se rapproche le plus a la phrase recherché ainsi que sa similarité
     $resultat=[];
@@ -334,6 +306,7 @@ function rechercheTexteWeb($texte){
 
 
 function interpretationResultat($tableau_resultat ,$tableau_phrase){
+
     $resultat=[];
     $bloc=$tableau_phrase[0]; //contiendra les phrase qui viennent du meme site
     $cmp=1; // compteur pour le nombre de lien identique
@@ -362,18 +335,6 @@ function interpretationResultat($tableau_resultat ,$tableau_phrase){
 }
 
 
-
-
-function rechercheWebavance($tab){
-    $bloc= $tab[0] ;
-    $lien = $tab[1];
-    $site = file_get_contents($lien);
-    return similar_text($bloc, $site)/strlen($bloc);
-}
-
-
-
-
 function nombreChar($tableau){
 //fonction qui renvoie le nombre de char d une phrase
 // entre : tableau de string
@@ -384,8 +345,6 @@ function nombreChar($tableau){
     }
     return $res;
 }
-
-
 
 
 function tronquer($texte,$n){
@@ -400,9 +359,9 @@ function tronquer($texte,$n){
     else return $texte;
 }
 
+
 function color_pourcentage($res)
 {
-
         if ($res <= 35) {
             $res1 =  "<p style='color: lime'>" . "$res" . "%" . "</p>";
         } elseif ($res > 35 && $res <= 65) {
@@ -410,28 +369,10 @@ function color_pourcentage($res)
         } else {
             $res1 = "<p style='color: red'>" . "$res" . "%" . "</p>";
         }
-
     return $res1;
 }
 
-//function afficheFormeTab($tres){
-////procedure qui affiche un tableau à de type i*3 visuelement
-//// entre : un tableau a deux dimension
-//
-//    echo "<table style='font: 100% sans-serif;  border-collapse: collapse; empty-cells: show; border: 1px solid #7a7;'>";
-//    echo  " <thead style='background-color: #efe; height: 50px;'>  <tr> <th style=' text-align: center;height: 50px;'> phrase </th> ";
-//    echo " <th style=' text-align: center;border: 1px solid #7a7; height: 50px;'> source </th>";
-//    echo "<th style=' text-align: center; height: 50px;'> plagiat </th> </tr>  </thead> <tbody> ";
-//
-//    for ( $i=0 ; $i<count($tres) ; $i++){
-//        echo ' <tr style ="border: 1px solid #7a7;">  <td >'.$tres[$i][0].'</td>';
-//        $lien = '<a style ="color: rgb(0,5,0);" href='.$tres[$i][1].'>'.tronquer($tres[$i][1],30).'</a>';
-//        echo  '<td style ="color: rgb(0,5,0);font-color:#efe;border: 1px solid #7a7;">'.$lien.'</td>';
-//        echo '<td>'.number_format($tres[$i][2], 1)."%".'</td> </tr>';
-//    }
-//    echo '</tbody></table>';
-//
-//}
+
 function afficheFormeTab($tres){
 //procedure qui affiche un tableau à de type i*3 visuelement
 // entre : un tableau a deux dimension
@@ -454,21 +395,17 @@ function afficheFormeTab($tres){
 
 
 function CVTexte($file_name){
+//utilisation de l'api CLOUD-VISION de google
 //fonction qui prend recupere le texte d'une image
 //entrée : un path
-//en sortie : un string
+//en sortie : un string(le texte de l'image)
 
     $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
-
     $ressource = fopen("images/".$file_name,'r');
-
     $image = $vision->image($ressource,['TEXT_DETECTION']);
-
     $result = $vision->annotate($image);
-
     $text = $result->text();
     $contenu_img = $text[0]->info()['description'];
-
     return $contenu_img;
 }
 
