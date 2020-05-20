@@ -64,7 +64,7 @@ function recherchePhraseWebAvance($phrase){
 //entre    phrase:string
 //sortie    string(html)
 
-    $q = preg_replace("/[.,;:\/\?\!]/", ' ', $phrase); // on nettoi la ponctuation
+    $q = preg_replace("/[.,;:\/\!]/", ' ', $phrase); // on nettoi la ponctuation
 
     preg_match("/\S.*\S/",$q,$trouve); //on supprime les espaces en debut et fin de phrase
     $q = $trouve[0];
@@ -87,40 +87,51 @@ function selectBetterlinkAvance($phrase){
     $html = recherchePhraseWebAvance($phrase);
     $entre = entreAvance($html);
     $tableau_recheche = blockRechercheR($html);
-    $resultat = ["phrase" ,"lien",0];
+    $resultat = [$phrase ,"lien",0,$phrase];
+
+    $tableau_split = preg_split("/\s+/",$phrase);
+    $tableau_mot = recupere_mot_tableau($tableau_split);
 
     if(count($tableau_recheche)==1){ // si on a un seul resultat dans la recherche c est notre résultat
         $lien = recupereLienR($tableau_recheche[0]);
         $resultat=[$phrase, $lien , 100];
+        $resultat[3]="<mark>".$phrase."</mark>";
         return $resultat;
     }
 
-
     for ($i=0; $i<count($tableau_recheche); $i++){
         $contenu = preContenuAmeliorer($tableau_recheche[$i]);
-        $similarite = compareMot( $entre , $contenu )*100;
-        if ( $similarite > $resultat[2] ){
+        $similarite = compareMot( $entre , $contenu );
+        if ( $similarite[0]*100 > $resultat[2] ){
             $lien = recupereLienR($tableau_recheche[$i]);
-            $resultat=[$phrase, $lien , $similarite ];
+            $resultat=[$phrase, $lien , number_format($similarite[0]*100 , 2),$similarite[1]];
         }
     }
+
+    $resultat[3]= transfere_surligne($tableau_split,$tableau_mot,$resultat[3]);
     return $resultat;
 }
 
 
 
-
+//==============================================================
 function compareMot($s1,$s2){
     //on compare 2 chaines de caractère et on renvoi le pourcentage de similarite
     //entre S1,S2 string
     //sortie float
     if (strlen($s1)<3 || strlen($s1)<3) return 0;
-    $s1clean = preg_split("/\s?[\.\?\!\:\s]\s?/",$s1);
-    $s2clean = preg_split("/\s?[\.\?\!\:\s]\s?/",$s2);
-    $tabm = recupere_mot_tableau($s1clean);
-    $tabm2 = recupere_mot_tableau($s2clean);
-    $result = croisement_tableau($tabm, $tabm2);
-    return nombreChar(array_values($result)) /nombreChar($s1clean);
+    $s1clean = preg_split("/\s+/",$s1);
+    $s2clean = preg_split("/\s+/",$s2);
+
+    $s1clean = recupere_mot_tableau_web($s1clean);
+    $s2clean = recupere_mot_tableau_web($s2clean);
+
+    $result = croisement_tableau($s1clean, $s2clean);
+
+    $similarite = (nombreChar(array_values($result))+count($result)-2) /(nombreChar($s1clean)+count($result)-2);
+    $phrase = surligner_phrase_w($s1clean,$result);
+
+    return [$similarite,$phrase];
 }
 
 
@@ -218,7 +229,7 @@ function croisement_tableau($tableau , $tableau_2){
     //entre :$tableau array<string> , $tableau_2 array<string>
     //sortie : array<string>
 
-    $res=[""];
+    $res=[];
     $tableau_2_anexe = $tableau_2;
     for ($i=0;$i<count($tableau);$i++){
         $est_dans = est_dans($tableau[$i], $tableau_2_anexe);
@@ -242,6 +253,19 @@ function recupere_mot_tableau($tableau){
     return $tableau_res;
 }
 
+function recupere_mot_tableau_web($tableau){
+    //celle fonction qui est similaire  recupère_mot_tableau est fait pour les plagiat en ligne car on a des fois caratère spéciaux
+    //fonction qui récupere un tableau de string et on supprime des caractères spéciaux dans des chaines de caractères
+    //entre : tableau de string
+    //sortie : tableau de string
+    $tableau_res=[];
+    for ($i=0;$i<count($tableau);$i++){
+        preg_match("/[.;:,\"]?([^.;:,\"]*)[.;:,\"]?/",$tableau[$i],$mot);
+        array_push($tableau_res , $mot[1]);
+    }
+    return $tableau_res;
+}
+
 
 
 function marquer_mot($mot_regex , $mot ){
@@ -250,10 +274,17 @@ function marquer_mot($mot_regex , $mot ){
     //sortie  string
 
     $regex = "/[a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]((\S)*([a-zA-Z0-9éèêëàâîïôùûüÿæœçÂÊÎÔÛÄËÏÖÜÀÆæÇÉÈŒÙ]))?/";
+    $point="";
+    if (strlen($mot_regex)>0){
+        if ($mot_regex[strlen($mot_regex)-1]==".") $point=".";
+    }
+
    if ( preg_match($regex , $mot_regex , $mot_anexe) ){
-       if (strcasecmp($mot_anexe[0],$mot) == 0)  return str_replace($mot_regex," <mark>".$mot_anexe[0]."</mark>",$mot_regex);
+
+       if (strcasecmp($mot_anexe[0],$mot) == 0)  return str_replace($mot_regex," <mark>".$mot_anexe[0]."</mark>".$point,$mot_regex);
+       else return "<mark>".$mot_regex."</mark>".$point;
    }
-    else return $mot_regex;
+    else return $mot_regex.$point;
 }
 
 
@@ -276,8 +307,66 @@ function surligner_phrase($phrase_tab ,$phrase_tab_anexe, $mot_a_souligner){
     return $phrase_resultat;
 }
 
+function surligner_phrase_w($phrase_tab ,  $mot_a_souligner){
+//fonction qui surligne les mots
+//entre phrase_tab : tableau de string  ; mot_a_souligner : tableau de string
+//sortie string
+
+    $phrase_resultat="";
+    for ($i=0;$i<count($phrase_tab);$i++){
+        $res = est_dans($phrase_tab[$i],$mot_a_souligner ); //on verifie si un mot est à souligner
+        if ($res[0]){///true
+            unset($mot_a_souligner[$res[2]]);//on supprime le mot qu'on va souligner
+            $mot_a_souligner  = array_values($mot_a_souligner );//on récupère le nouveau tableau
+            $phrase_resultat = $phrase_resultat." <mark>".$phrase_tab[$i]."</mark>";//on marque le mot en question
+        }
+        else $phrase_resultat = $phrase_resultat." ".$phrase_tab[$i];
+    }
+    return $phrase_resultat;
+}
 
 
+function transfere_surligne($tableau_phrase , $tableau_phrase_clean , $phrase_web_surligne){
+    if ($tableau_phrase[0]==""){
+        unset($tableau_phrase[0]);
+        $tableau_phrase=array_values($tableau_phrase);
+    }   if ($tableau_phrase_clean[0]==""){
+        unset($tableau_phrase_clean[0]);
+        $tableau_phrase_clean=array_values($tableau_phrase_clean);
+    }
+
+    $tableau_mot_surligne = preg_split("/\s+/",$phrase_web_surligne);
+    if ($tableau_mot_surligne[0]==""){
+        unset($tableau_mot_surligne[0]);
+        $tableau_mot_surligne=array_values($tableau_mot_surligne);
+    }
+    if ($tableau_mot_surligne[count($tableau_mot_surligne)-1]=="<mark></mark>"){
+        unset($tableau_mot_surligne[count($tableau_mot_surligne)-1]);
+        $tableau_mot_surligne=array_values($tableau_mot_surligne);
+    }
+
+    $phrase_resultat="";
+    for ($i=0;$i<count($tableau_phrase);$i++){
+        if (preg_match("/<mark>/",$tableau_mot_surligne[$i])){
+            $phrase_resultat = $phrase_resultat.marquer_mot($tableau_phrase[$i] , $tableau_phrase_clean[$i] );
+        }else  $phrase_resultat = $phrase_resultat." ".$tableau_phrase[$i];
+    }
+    return $phrase_resultat.".";
+}
+
+function surligner_phrase_web($phrase , $mot_a_souligner){
+//fonction qui surligne les mots
+//entre phrase_tab : tableau de string  ; mot_a_souligner : tableau de string
+//sortie string
+
+    $phrase_resultat=$phrase;
+    for ($i=0;$i<count($mot_a_souligner);$i++){
+        $mot=" ".$mot_a_souligner[$i];
+        $mot_r = " <mark>".$mot_a_souligner[$i]."</mark>";
+        $phrase_resultat = str_replace($mot,$mot_r,$phrase_resultat);
+    }
+    return $phrase_resultat;
+}
 
 
 
@@ -299,7 +388,6 @@ function rechercheTexteWeb($texte){
     for ($i=0; $i<count($tableau); $i++){
         if (strlen($tableau[$i]) >10 ) array_push($resultat, selectBetterlinkAvance($tableau[$i]));
     }
-
     return $resultat;
 }
 
@@ -360,15 +448,22 @@ function tronquer($texte,$n){
 }
 
 
+
+
+
 function color_pourcentage($res)
 {
-        if ($res <= 35) {
-            $res1 =  "<p style='color: lime'>" . "$res" . "%" . "</p>";
-        } elseif ($res > 35 && $res <= 65) {
-            $res1 =  "<p style='color: darkorange'>" . "$res" . "%" . "</p>";
-        } else {
-            $res1 = "<p style='color: red'>" . "$res" . "%" . "</p>";
-        }
+    if ($res > 50) {
+        $vert = (100-$res)*0.02*255;
+        $vert = number_format($vert , 0);
+        $res1 =  "<p style='color: rgb(255,$vert,0)'>" . "$res" . "%" . "</p>";
+    } elseif ($res < 50) {
+        $rouge = $res*0.02*255;
+        $rouge = number_format($rouge , 0);
+        $res1 =  "<p style='color: rgb($rouge,255,0)'>" . "$res" . "%" . "</p>";
+    } else {
+        $res1 =  "<p style='color: rgb(255,255,0)'>" . "$res" . "%" . "</p>";
+    }
     return $res1;
 }
 
@@ -391,6 +486,41 @@ function afficheFormeTab($tres){
     }
 
     echo '</tbody></table>';
+}
+
+function afficheResultat($resultat){
+    //fonction qui affiche un résultat ous forme d'un camenbert
+    //entre      resultat:float
+
+    $resultat_sans_virgule=number_format($resultat , 0);
+
+
+    if ($resultat <=50){
+        echo "<div class=\"progress-circle p$resultat_sans_virgule\">
+       <span>$resultat%</span>
+       <div class=\"left-half-clipper\">
+          <div class=\"first50-bar\"></div>
+          <div class=\"value-bar\"></div>
+       </div>
+    </div>";
+    }elseif ($resultat>50 && $resultat<=100 ){
+        echo "<div class=\"progress-circle over50 p$resultat_sans_virgule\">
+           <span>$resultat%</span>
+           <div class=\"left-half-clipper\">
+              <div class=\"first50-bar\"></div>
+              <div class=\"value-bar\"></div>
+           </div>
+        </div>";
+    }else{
+        echo "<div class=\"progress-circle over50 p100\">
+           <span>100%</span>
+           <div class=\"left-half-clipper\">
+              <div class=\"first50-bar\"></div>
+              <div class=\"value-bar\"></div>
+           </div>
+        </div>";
+    }
+
 }
 
 

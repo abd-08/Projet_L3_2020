@@ -1,5 +1,6 @@
 <?php
 require('fpdf182/fpdf.php');
+require "../TraitementOnline.php";
 
 class PDF_WriteTag extends FPDF
 {
@@ -33,8 +34,8 @@ class PDF_WriteTag extends FPDF
 
 	// Public Functions
     function resultat ( $txt){
-        $this->SetTextColor(255,0,0);
-        $this->SetFont("arial", "B",18);
+        $this-> color_pourcent(number_format(intval($txt),0));
+        $this->SetFont("arial", "B",30);
         $this->Cell(0,0,$txt."% de plagiat" ,0,1,'C',false);
     }
 
@@ -76,6 +77,71 @@ class PDF_WriteTag extends FPDF
 		$this->BorderBottom();
 	}
 
+    // Chargement des données
+    function LoadData($file)
+    {
+        // Lecture des lignes du fichier
+        $lines = file($file);
+        $data = array();
+        foreach($lines as $line)
+            $data[] = explode(';',trim($line));
+        return $data;
+    }
+
+    function color_pourcent($res)
+    {
+        if ($res > 50) {
+            $vert = (100-$res)*0.02*255;
+            $vert = number_format($vert , 0);
+            $this->SetTextColor(255,$vert,0);
+        } elseif ($res < 50) {
+            $rouge = $res*0.02*255;
+            $rouge = number_format($rouge , 0);
+            $this->SetTextColor($rouge,255,0);
+        } else {
+            $this->SetTextColor(255,255,0);
+        }
+    }
+
+
+    // Tableau coloré
+    function FancyTable($header, $data)
+    {
+        // Couleurs, épaisseur du trait et police grasse
+        $this->SetFillColor(255,0,0);
+        $this->SetFillColor(52,69,182);
+        $this->SetTextColor(255,255,255);
+        $this->SetDrawColor(0,0,255);
+        $this->SetLineWidth(.1);
+        $this->SetFont('','',10);
+        // En-tête
+        $w = array(120,50,20);
+        for($i=0;$i<count($header);$i++)
+            $this->Cell($w[$i],8,$header[$i],1,0,'C',true);
+        $this->Ln();
+        // Restauration des couleurs et de la police
+        $this->SetFillColor(224,235,255);
+        $this->SetTextColor(0);
+        $this->SetFont('');
+        // Données
+        $fill = false;
+        foreach($data as $row)
+        {
+            $this->SetFont('','',10);
+            $this->SetTextColor(0);
+            $this->Cell($w[0],9,utf8_decode(tronquer($row[0],69)),'LR',0,'L',$fill);
+            $this->Cell($w[1],9,tronquer($row[1],30),'LR',0,'L',$fill ,$row[1]);
+            $this->SetTextColor(255,0,0);
+            $this-> color_pourcent($row[2]);
+            $this->SetFont('','B',10);
+            $this->Cell($w[2],9,$row[2]."%",'LR',0,'R',$fill);
+
+            $this->Ln();
+            $fill = !$fill;
+        }
+        // Trait de terminaison
+        $this->Cell(array_sum($w),0,'','T');
+    }
 
 	function SetStyle($tag, $family, $style, $size, $color, $indent=-1 , $highlight=false)
 	{
