@@ -7,6 +7,7 @@ $similarite_2 =$_SESSION['similitude_2'];
 $texte =  $_SESSION['texte'] ;
 $texte_2 =  $_SESSION['texte_2'] ;
 
+
 $pdf=new PDF_WriteTag();
 $pdf->SetMargins(30,15,25);
 $pdf->SetFont('courier','',12);
@@ -30,7 +31,7 @@ $pdf->SetFillColor(255,225,0);
 $pdf->SetDrawColor(102,0,102);
 $pdf->WriteTag(0,10,$txt,1,"C",0,5);
 
-$pdf->Ln(15);
+$pdf->Ln(20);
 
 
 
@@ -38,23 +39,24 @@ $pdf->SetLineWidth(0.1);
 $pdf->SetFillColor(102,0,102);
 $pdf->SetDrawColor(255,255,255);
 $pdf->resultat($similarite*100);
-$pdf->Ln(10);
+$pdf->Ln(20);
 
 $pdf->titre_paragraphe("Rendu du texte 1 :");
-$pdf->Ln(3);
+$pdf->Ln(5);
 
 $pdf->SetLineWidth(0.1);
 $pdf->SetFillColor(255,255,204);
 $pdf->SetDrawColor(102,0,102);
-$pdf->WriteTag(0,5,utf8_decode( utf8_decode(utf8_encode($texte))),1,"J",0,7);
+$pdf->WriteTag(0,5,utf8_decode(  $texte),1,"J",0,7);
 $pdf->Ln(5);
 
 
 $pdf->AddPage();
-$pdf->resultat($similarite_2);
-$pdf->Ln(10);
+$pdf->Ln(20);
+$pdf->resultat($similarite_2*100);
+$pdf->Ln(20);
 $pdf->titre_paragraphe("Rendu du texte 2 :");
-$pdf->Ln(3);
+$pdf->Ln(5);
 $pdf->WriteTag(0,5,utf8_decode($texte_2),1,"J",0,7);
 $pdf->Ln(5);
 

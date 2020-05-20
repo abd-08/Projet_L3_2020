@@ -1,17 +1,15 @@
 
 <?php
 session_start();
- include "header.php"; ?>
+include "header.php";
+require "vendor/autoload.php";
+require "traitement.php";
+require "TraitementOnline.php";
+use Google\Cloud\Vision\VisionClient;?>
 
 <body>
 
 <?php
-require "vendor/autoload.php";
- require "traitement.php";
- require "TraitementOnline.php";
- use Google\Cloud\Vision\VisionClient;
-
-
 
 
 $choix  = $_POST['choix'];
@@ -38,43 +36,17 @@ else {
 }
 
 
-
     $re = compareMot2($texte_1, $texte_2);
 
     $_SESSION['plagiat'] = $re;
     $_SESSION['texte'] = "<p>".$re[1]."</p>";
     $_SESSION['texte_2'] = "<p>".$re[2]."</p>";
     $_SESSION['similitude'] =  number_format($re[0]/strlen($texte_1) , 2) ;
+    $_SESSION['similitude_2'] =  number_format($re[0]/strlen($texte_2) , 2) ;
     echo "<section>";
 
     $res = number_format($re[0]/strlen($texte_1) , 2)*100;//resultat sans virgule
-    $res_detail =  number_format($re[0]/strlen($texte_1) , 4)*100 ;//resultat avec 2 chiffre après la virgule
-
-    if ($res <=50){
-        echo "<div class=\"progress-circle p$res\">
-       <span>$res_detail%</span>
-       <div class=\"left-half-clipper\">
-          <div class=\"first50-bar\"></div>
-          <div class=\"value-bar\"></div>
-       </div>
-    </div>";
-    }elseif ($res>50 && $res<=100 ){
-        echo "<div class=\"progress-circle over50 p$res\">
-           <span>$res_detail%</span>
-           <div class=\"left-half-clipper\">
-              <div class=\"first50-bar\"></div>
-              <div class=\"value-bar\"></div>
-           </div>
-        </div>";
-    }else{
-        echo "<div class=\"progress-circle over50 p100\">
-           <span>100%</span>
-           <div class=\"left-half-clipper\">
-              <div class=\"first50-bar\"></div>
-              <div class=\"value-bar\"></div>
-           </div>
-        </div>";
-        }
+   afficheResultat($res);
 
     echo "<br/>";
     echo "<h6> Paragraphe 1 : </h6> ";
