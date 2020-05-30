@@ -1,6 +1,6 @@
 <?php
 require('fpdf182/fpdf.php');
-require "../TraitementOnline.php";
+require "../Fonction/FonctionTraitement.php";
 
 class PDF_WriteTag extends FPDF
 {
@@ -107,6 +107,7 @@ class PDF_WriteTag extends FPDF
     // Tableau coloré
     function FancyTable($header, $data)
     {
+        $this->Ln();
         // Couleurs, épaisseur du trait et police grasse
         $this->SetFillColor(255,0,0);
         $this->SetFillColor(52,69,182);

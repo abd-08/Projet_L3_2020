@@ -2,8 +2,8 @@
 session_start();
 include "header.php";
 require "vendor/autoload.php";
-require "traitement.php";
-require "TraitementOnline.php"; ?>
+require "Fonction/FonctionInternet.php";
+require "Fonction/FonctionTraitement.php"; ?>
 
 <body>
 
@@ -16,12 +16,11 @@ require "TraitementOnline.php"; ?>
         $texte1= $_POST['text_1'];
     }
     else{
-        var_dump($_FILES['image_2']);
         if(isset($_FILES['image_2'])){
             $file_name = $_FILES['image_2']['name'];
             $file_tmp =$_FILES['image_2']['tmp_name'];
             move_uploaded_file($file_tmp,"images/".$file_name);
-            $texte_1 = CVTexte($file_name);//utilisation de cloud vision pour recuperer le texte
+            $texte1 = CVTexte($file_name);//utilisation de cloud vision pour recuperer le texte
         }
         else $texte1 = "VIDE";
 
@@ -38,7 +37,8 @@ require "TraitementOnline.php"; ?>
     $texte_surligne = "";
     for ($i=0;$i<count($varf);$i++){
     	$res = $res + $varf[$i][2];
-    	$texte_surligne = $texte_surligne.$varf[$i][3];
+    	if ($varf[$i][2]>95) $texte_surligne = $texte_surligne."<mark>".$varf[$i][0]."</mark>";
+    	else $texte_surligne = $texte_surligne.$varf[$i][3];
     }
     $texte_surligne = "<p>".$texte_surligne."</p>";
     $res=$res/count($varf);

@@ -14,12 +14,14 @@ header{
 }
 
 footer{
+
     text-align:center;
     color:#3445B6;
-    padding: 1px;
+    padding: 10px;
     width: 100%;
     background-color: white;
 }
+
 
 textarea {
     padding: 12px 20px;

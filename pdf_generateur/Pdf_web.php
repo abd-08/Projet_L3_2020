@@ -52,14 +52,13 @@ $pdf->Ln(5);
 // Signature
 $txt = "<a href='https://www.univ-smb.fr/'>by L3 informatique USMB</a>";
 $pdf->WriteTag(0, 10, $txt, 0, "R");
+$pdf->Ln(20);
 
 
 $header = array('Phrase', 'Lien', 'Plagiat');
-// Chargement des données
-$data = $pdf->LoadData('copie.txt');
 $pdf->SetFont('Arial', '', 14);
 $pdf->SetMargins(11, 15, 25);
-$pdf->AddPage();
+
 $pdf->FancyTable($header, $tablo);
 
 

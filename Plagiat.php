@@ -3,9 +3,9 @@
 session_start();
 include "header.php";
 require "vendor/autoload.php";
-require "traitement.php";
-require "TraitementOnline.php";
-use Google\Cloud\Vision\VisionClient;?>
+require "Fonction/FonctionInternet.php";
+require "Fonction/FonctionTraitement.php";
+?>
 
 <body>
 
