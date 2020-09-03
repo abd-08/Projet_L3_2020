@@ -3,9 +3,10 @@
 [![capture page acceuil](index.JPG)](https://www.youtube.com/watch?v=dF8PEdEpPso&feature=youtu.be)
 
 
+## Technologie utilisé
 
-Composer est notre outil pour gérer les dépendances dans ce projet
-line pour telecharger composer   => https://getcomposer.org/
+Composer : gestionnaire de dépendances dans ce projet
+[telecharger composer]  (https://getcomposer.org/ "lien vers composer")
 
 
 le ficher key.json contient la clée pour utiliser cloud vision
