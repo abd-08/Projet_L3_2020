@@ -6,7 +6,7 @@
 ## Technologie utilisé
 
 Composer : gestionnaire de dépendances dans ce projet
-[telecharger composer]  (https://getcomposer.org/ "lien vers composer")
+[telecharger composer](https://getcomposer.org/ "lien vers composer")
 
 
 le ficher key.json contient la clée pour utiliser cloud vision
