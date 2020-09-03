@@ -5,22 +5,32 @@
 
 ## Technologie utilisé
 
-Composer : gestionnaire de dépendances dans ce projet
-[telecharger composer](https://getcomposer.org/ "lien vers composer")
+    Composer : gestionnaire de dépendances dans ce projet.
+    Cloud-vision : API ORC , pour récupérer les charactères d'une image.
+    HTML , CSS , JS , BOOSTRAP : front-end.
+    PHP : back-end.
+    FPDF : librairie php pour la génération d'un fichier pdf.
+    Curl : bibliothèque permettant de récupérer une page web.
+    
+    
+Télécharger composer [ici .](https://getcomposer.org/ "lien vers composer").
+
+Télécharger FPDF [ici .](http://www.fpdf.org/ "lien vers fpdf")   sinon faire
+  
+    composer require fpdf/fpdf
+    
+Ajouter curl à son projet :
+
+    composer require curl/curl
+
+Ajouter cloud-visionà son projet :
+ 
+    composer require google/cloud-vision
 
 
-le ficher key.json contient la clée pour utiliser cloud vision
-Pour utiliser cloud vision il faut l'installer dans le projet
- Cloud vision    =>   composer require google/cloud-vision
+IMPORTANT : le ficher key.json contient la clée pour utiliser cloud vision
+Cette clée est accessible grâce à une souscription chez google.
 
-
-Curl est la bibliothèque permettant d'accéder a un contenu web  ,
-pour l'instant elle n'est pas utiliser
-Curl pour la capture de page web  =>  composer require curl/curl
-
-
-FPDF bibliothèque permettant de créer un pdf
-FPDF    =>    composer require fpdf/fpdf
 
 
 
