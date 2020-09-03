@@ -13,9 +13,9 @@
     Curl : bibliothèque permettant de récupérer une page web.
     
     
-Télécharger composer [ici .](https://getcomposer.org/ "lien vers composer").
+Télécharger composer [ici ](https://getcomposer.org/ "lien vers composer").
 
-Télécharger FPDF [ici .](http://www.fpdf.org/ "lien vers fpdf")   sinon faire
+Télécharger FPDF [ici ](http://www.fpdf.org/ "lien vers fpdf") ,  sinon faire
   
     composer require fpdf/fpdf
     
