@@ -28,7 +28,7 @@ Ajouter cloud-visionà son projet :
     composer require google/cloud-vision
 
 
-IMPORTANT : le ficher key.json contient la clée pour utiliser cloud vision
+IMPORTANT : le ficher key.json contient la clée pour utiliser cloud vision.
 Cette clée est accessible grâce à une souscription chez google.
 
 
