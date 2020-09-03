@@ -23,9 +23,11 @@ Ajouter curl à son projet :
 
     composer require curl/curl
 
-Ajouter cloud-visionà son projet :
+Ajouter cloud-vision à son projet :
  
-    composer require google/cloud-vision
+    composer require google/cloud-vision*
+    
+En alternative à cloud-vision on pourra utiliser l'API TESSERACT.
 
 
 IMPORTANT : le ficher key.json contient la clée pour utiliser cloud vision.
